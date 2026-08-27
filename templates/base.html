@@ -1,0 +1,930 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+    <!-- =====================================================
+         M1000 — BASE TEMPLATE
+         Premium Streaming Website
+    ====================================================== -->
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <meta
+        name="theme-color"
+        content="#080808"
+    >
+
+    <meta
+        name="description"
+        content="M1000 — Premium Movies & Web Series"
+    >
+
+    <title>
+        {% block title %}
+            M1000 — Movies & Web Series
+        {% endblock %}
+    </title>
+
+
+    <!-- =====================================================
+         GOOGLE FONT
+    ====================================================== -->
+
+    <link
+        rel="preconnect"
+        href="https://fonts.googleapis.com"
+    >
+
+    <link
+        rel="preconnect"
+        href="https://fonts.gstatic.com"
+        crossorigin
+    >
+
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap"
+        rel="stylesheet"
+    >
+
+
+    <!-- =====================================================
+         MAIN CSS
+    ====================================================== -->
+
+    <link
+        rel="stylesheet"
+        href="{{ url_for('static', filename='css/style.css') }}"
+    >
+
+
+    {% block head %}{% endblock %}
+
+</head>
+
+
+<body>
+
+
+<!-- =========================================================
+     PAGE WRAPPER
+========================================================= -->
+
+<div class="site-wrapper">
+
+
+    <!-- =====================================================
+         HEADER
+    ====================================================== -->
+
+    <header
+        class="site-header"
+        id="siteHeader"
+    >
+
+        <nav
+            class="navbar"
+            aria-label="Main navigation"
+        >
+
+            <div class="navbar-inner">
+
+
+                <!-- =========================================
+                     BRAND
+                ========================================== -->
+
+                <a
+                    href="{{ url_for('home') }}"
+                    class="brand"
+                    aria-label="M1000 Home"
+                >
+
+                    <span class="brand-mark">
+
+                        <img
+                            src="{{ url_for(
+                                'static',
+                                filename='images/logo.png'
+                            ) }}"
+                            alt=""
+                            class="brand-logo"
+                            width="38"
+                            height="38"
+                        >
+
+                    </span>
+
+                    <span class="brand-text">
+                        M<span>1000</span>
+                    </span>
+
+                </a>
+
+
+                <!-- =========================================
+                     DESKTOP NAVIGATION
+                ========================================== -->
+
+                <div
+                    class="desktop-nav"
+                    id="desktopNav"
+                >
+
+                    <a
+                        href="{{ url_for('home') }}"
+                        class="nav-link"
+                    >
+                        Home
+                    </a>
+
+
+                    <a
+                        href="{{ url_for(
+                            'category',
+                            category_name='Tamil HD Movies'
+                        ) }}"
+                        class="nav-link"
+                    >
+                        Tamil HD
+                    </a>
+
+
+                    <a
+                        href="{{ url_for(
+                            'category',
+                            category_name='Tamil New Movies'
+                        ) }}"
+                        class="nav-link"
+                    >
+                        New Movies
+                    </a>
+
+
+                    <a
+                        href="{{ url_for(
+                            'category',
+                            category_name='Tamil Dubbed Movies'
+                        ) }}"
+                        class="nav-link"
+                    >
+                        Dubbed
+                    </a>
+
+
+                    <a
+                        href="{{ url_for(
+                            'category',
+                            category_name='Web Series'
+                        ) }}"
+                        class="nav-link"
+                    >
+                        Web Series
+                    </a>
+
+                </div>
+
+
+                <!-- =========================================
+                     NAV ACTIONS
+                ========================================== -->
+
+                <div class="nav-actions">
+
+
+                    <!-- =====================================
+                         DESKTOP SEARCH
+                    ====================================== -->
+
+                    <form
+                        action="{{ url_for('search') }}"
+                        method="GET"
+                        class="desktop-search"
+                        role="search"
+                    >
+
+                        <svg
+                            class="search-icon"
+                            viewBox="0 0 24 24"
+                            width="18"
+                            height="18"
+                            aria-hidden="true"
+                        >
+
+                            <circle
+                                cx="11"
+                                cy="11"
+                                r="7"
+                                fill="none"
+                                stroke="currentColor"
+                                stroke-width="2"
+                            ></circle>
+
+                            <path
+                                d="M16.5 16.5L21 21"
+                                fill="none"
+                                stroke="currentColor"
+                                stroke-width="2"
+                                stroke-linecap="round"
+                            ></path>
+
+                        </svg>
+
+
+                        <input
+                            type="search"
+                            name="q"
+                            placeholder="Search movies..."
+                            autocomplete="off"
+                            maxlength="100"
+                            aria-label="Search movies"
+                        >
+
+
+                        <button
+                            type="submit"
+                            aria-label="Submit search"
+                        >
+                            Search
+                        </button>
+
+                    </form>
+
+
+                    <!-- =====================================
+                         MOBILE SEARCH BUTTON
+                    ====================================== -->
+
+                    <button
+                        type="button"
+                        class="mobile-search-button"
+                        id="mobile-search-button"
+                        aria-label="Open search"
+                        aria-expanded="false"
+                        aria-controls="mobile-search-panel"
+                    >
+
+                        <svg
+                            viewBox="0 0 24 24"
+                            width="21"
+                            height="21"
+                            aria-hidden="true"
+                        >
+
+                            <circle
+                                cx="11"
+                                cy="11"
+                                r="7"
+                                fill="none"
+                                stroke="currentColor"
+                                stroke-width="2"
+                            ></circle>
+
+                            <path
+                                d="M16.5 16.5L21 21"
+                                fill="none"
+                                stroke="currentColor"
+                                stroke-width="2"
+                                stroke-linecap="round"
+                            ></path>
+
+                        </svg>
+
+                    </button>
+
+
+                    <!-- =====================================
+                         MOBILE MENU BUTTON
+                    ====================================== -->
+
+                    <button
+                        type="button"
+                        class="mobile-menu-button"
+                        id="mobile-menu-button"
+                        aria-label="Open navigation menu"
+                        aria-expanded="false"
+                        aria-controls="mobile-menu"
+                    >
+
+                        <span></span>
+                        <span></span>
+                        <span></span>
+
+                    </button>
+
+                </div>
+
+            </div>
+
+
+            <!-- =================================================
+                 MOBILE SEARCH PANEL
+            ================================================== -->
+
+            <div
+                class="mobile-search-panel"
+                id="mobile-search-panel"
+                aria-hidden="true"
+            >
+
+                <form
+                    action="{{ url_for('search') }}"
+                    method="GET"
+                    class="mobile-search-form"
+                    role="search"
+                >
+
+                    <div class="mobile-search-input-wrap">
+
+                        <svg
+                            viewBox="0 0 24 24"
+                            width="18"
+                            height="18"
+                            aria-hidden="true"
+                        >
+
+                            <circle
+                                cx="11"
+                                cy="11"
+                                r="7"
+                                fill="none"
+                                stroke="currentColor"
+                                stroke-width="2"
+                            ></circle>
+
+                            <path
+                                d="M16.5 16.5L21 21"
+                                fill="none"
+                                stroke="currentColor"
+                                stroke-width="2"
+                                stroke-linecap="round"
+                            ></path>
+
+                        </svg>
+
+
+                        <input
+                            type="search"
+                            name="q"
+                            placeholder="Search movies & web series..."
+                            autocomplete="off"
+                            maxlength="100"
+                            aria-label="Search movies and web series"
+                        >
+
+                    </div>
+
+
+                    <button
+                        type="submit"
+                        class="mobile-search-submit"
+                    >
+                        Search
+                    </button>
+
+                </form>
+
+            </div>
+
+
+        </nav>
+
+    </header>
+
+
+
+    <!-- =========================================================
+         MOBILE SIDE MENU OVERLAY
+    ========================================================== -->
+
+    <div
+        class="menu-overlay"
+        id="menu-overlay"
+        aria-hidden="true"
+    ></div>
+
+
+
+    <!-- =========================================================
+         MOBILE SIDE MENU
+    ========================================================== -->
+
+    <aside
+        class="mobile-menu"
+        id="mobile-menu"
+        aria-hidden="true"
+    >
+
+        <div class="mobile-menu-header">
+
+            <a
+                href="{{ url_for('home') }}"
+                class="mobile-brand"
+            >
+
+                <span class="mobile-brand-mark">
+                    M
+                </span>
+
+                <span>
+                    M1000
+                </span>
+
+            </a>
+
+
+            <button
+                type="button"
+                class="close-menu"
+                id="close-menu"
+                aria-label="Close navigation menu"
+            >
+                ×
+            </button>
+
+        </div>
+
+
+        <div class="mobile-menu-body">
+
+
+            <!-- =============================================
+                 HOME
+            ============================================== -->
+
+            <a
+                href="{{ url_for('home') }}"
+                class="mobile-nav-link"
+            >
+
+                <span class="mobile-nav-icon">
+                    ⌂
+                </span>
+
+                <span>
+                    Home
+                </span>
+
+            </a>
+
+
+            <!-- =============================================
+                 TAMIL HD
+            ============================================== -->
+
+            <a
+                href="{{ url_for(
+                    'category',
+                    category_name='Tamil HD Movies'
+                ) }}"
+                class="mobile-nav-link"
+            >
+
+                <span class="mobile-nav-icon">
+                    HD
+                </span>
+
+                <span>
+                    Tamil HD Movies
+                </span>
+
+            </a>
+
+
+            <!-- =============================================
+                 NEW MOVIES
+            ============================================== -->
+
+            <a
+                href="{{ url_for(
+                    'category',
+                    category_name='Tamil New Movies'
+                ) }}"
+                class="mobile-nav-link"
+            >
+
+                <span class="mobile-nav-icon">
+                    NEW
+                </span>
+
+                <span>
+                    New Movies
+                </span>
+
+            </a>
+
+
+            <!-- =============================================
+                 DUBBED
+            ============================================== -->
+
+            <a
+                href="{{ url_for(
+                    'category',
+                    category_name='Tamil Dubbed Movies'
+                ) }}"
+                class="mobile-nav-link"
+            >
+
+                <span class="mobile-nav-icon">
+                    TV
+                </span>
+
+                <span>
+                    Tamil Dubbed
+                </span>
+
+            </a>
+
+
+            <!-- =============================================
+                 WEB SERIES
+            ============================================== -->
+
+            <a
+                href="{{ url_for(
+                    'category',
+                    category_name='Web Series'
+                ) }}"
+                class="mobile-nav-link"
+            >
+
+                <span class="mobile-nav-icon">
+                    ▶
+                </span>
+
+                <span>
+                    Web Series
+                </span>
+
+            </a>
+
+
+            <div class="mobile-menu-divider"></div>
+
+
+            <!-- =============================================
+                 EXTRA LINKS
+            ============================================== -->
+
+            <a
+                href="{{ url_for('privacy') }}"
+                class="mobile-nav-link secondary"
+            >
+
+                <span class="mobile-nav-icon">
+                    •
+                </span>
+
+                <span>
+                    Privacy
+                </span>
+
+            </a>
+
+
+            <a
+                href="{{ url_for('dmca') }}"
+                class="mobile-nav-link secondary"
+            >
+
+                <span class="mobile-nav-icon">
+                    •
+                </span>
+
+                <span>
+                    DMCA
+                </span>
+
+            </a>
+
+
+            <a
+                href="{{ url_for('contact') }}"
+                class="mobile-nav-link secondary"
+            >
+
+                <span class="mobile-nav-icon">
+                    •
+                </span>
+
+                <span>
+                    Contact
+                </span>
+
+            </a>
+
+        </div>
+
+
+        <div class="mobile-menu-footer">
+
+            <span>
+                M1000
+            </span>
+
+            <small>
+                Movies & Web Series
+            </small>
+
+        </div>
+
+    </aside>
+
+
+
+    <!-- =========================================================
+         TOP ADVERTISEMENT
+         Adsterra code can be placed inside this block.
+         
+         IMPORTANT:
+         Replace the placeholder with your own Adsterra
+         publisher code when you receive it.
+    ========================================================== -->
+
+    {% block top_ad %}
+
+    <div class="ad-container ad-top">
+
+        <span class="ad-label">
+            Advertisement
+        </span>
+
+        <div
+            class="ad-slot"
+            id="ad-top"
+        >
+
+            <!--
+            ==================================================
+            ADSTERRA TOP AD
+
+            Paste your Adsterra banner/native code here.
+
+            Example structure only:
+
+            <script>
+                // Your Adsterra code
+            </script>
+
+            Do NOT use this placeholder as real ad code.
+            ==================================================
+            -->
+
+        </div>
+
+    </div>
+
+    {% endblock %}
+
+
+
+    <!-- =========================================================
+         MAIN CONTENT
+    ========================================================== -->
+
+    <main
+        id="main-content"
+        class="main-content"
+    >
+
+        {% block content %}
+
+        {% endblock %}
+
+    </main>
+
+
+
+    <!-- =========================================================
+         BOTTOM ADVERTISEMENT
+    ========================================================== -->
+
+    {% block bottom_ad %}
+
+    <div class="ad-container ad-bottom">
+
+        <span class="ad-label">
+            Advertisement
+        </span>
+
+        <div
+            class="ad-slot"
+            id="ad-bottom"
+        >
+
+            <!--
+            Adsterra bottom banner/native code
+            can be inserted here.
+            -->
+
+        </div>
+
+    </div>
+
+    {% endblock %}
+
+
+
+    <!-- =========================================================
+         FOOTER
+    ========================================================== -->
+
+    <footer class="site-footer">
+
+
+        <div class="footer-main">
+
+
+            <!-- =============================================
+                 BRAND COLUMN
+            ============================================== -->
+
+            <div class="footer-brand">
+
+                <a
+                    href="{{ url_for('home') }}"
+                    class="footer-logo"
+                >
+
+                    <span class="footer-logo-mark">
+                        M
+                    </span>
+
+                    <span>
+                        M1000
+                    </span>
+
+                </a>
+
+
+                <p>
+                    Your destination for movies,
+                    web series and entertainment.
+                </p>
+
+            </div>
+
+
+
+            <!-- =============================================
+                 BROWSE
+            ============================================== -->
+
+            <div class="footer-column">
+
+                <h3>
+                    Browse
+                </h3>
+
+
+                <a
+                    href="{{ url_for('home') }}"
+                >
+                    Home
+                </a>
+
+
+                <a
+                    href="{{ url_for(
+                        'category',
+                        category_name='Tamil HD Movies'
+                    ) }}"
+                >
+                    Tamil HD Movies
+                </a>
+
+
+                <a
+                    href="{{ url_for(
+                        'category',
+                        category_name='Tamil New Movies'
+                    ) }}"
+                >
+                    New Movies
+                </a>
+
+
+                <a
+                    href="{{ url_for(
+                        'category',
+                        category_name='Tamil Dubbed Movies'
+                    ) }}"
+                >
+                    Dubbed Movies
+                </a>
+
+
+                <a
+                    href="{{ url_for(
+                        'category',
+                        category_name='Web Series'
+                    ) }}"
+                >
+                    Web Series
+                </a>
+
+            </div>
+
+
+
+            <!-- =============================================
+                 INFORMATION
+            ============================================== -->
+
+            <div class="footer-column">
+
+                <h3>
+                    Information
+                </h3>
+
+
+                <a
+                    href="{{ url_for('privacy') }}"
+                >
+                    Privacy Policy
+                </a>
+
+
+                <a
+                    href="{{ url_for('dmca') }}"
+                >
+                    DMCA
+                </a>
+
+
+                <a
+                    href="{{ url_for('contact') }}"
+                >
+                    Contact
+                </a>
+
+            </div>
+
+        </div>
+
+
+
+        <!-- =================================================
+             FOOTER BOTTOM
+        ================================================== -->
+
+        <div class="footer-bottom">
+
+            <p>
+                ©
+                <span data-current-year>
+                    2026
+                </span>
+                M1000. All rights reserved.
+            </p>
+
+
+            <p>
+                Built for entertainment.
+            </p>
+
+        </div>
+
+    </footer>
+
+
+</div>
+
+
+
+<!-- =========================================================
+     BACK TO TOP
+========================================================= -->
+
+<button
+    type="button"
+    class="back-to-top"
+    id="back-to-top"
+    aria-label="Back to top"
+    title="Back to top"
+>
+    ↑
+</button>
+
+
+
+<!-- =========================================================
+     JAVASCRIPT
+========================================================= -->
+
+<script
+    src="{{ url_for('static', filename='js/app.js') }}"
+    defer
+></script>
+
+
+{% block scripts %}{% endblock %}
+
+
+</body>
+</html>

@@ -1,16 +1,10 @@
-<!-- =========================================================
-     M1000 — BASE TEMPLATE
-     Netflix-inspired Yellow / Black UI
-     File: templates/base.html
-========================================================= -->
-
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
 
     <!-- =====================================================
-         BASIC META
+         M1000 — BASE TEMPLATE
+         Yellow + Black Cinematic Streaming UI
     ====================================================== -->
 
     <meta charset="UTF-8">
@@ -22,19 +16,35 @@
 
     <meta
         name="theme-color"
-        content="#050505"
+        content="#080808"
+    >
+
+    <meta
+        name="color-scheme"
+        content="dark"
     >
 
     <meta
         name="description"
-        content="{{ site_description }}"
+        content="M1000 — Movies, series and entertainment."
     >
 
     <title>
         {% block title %}
-            {{ site_name }}
+            {{ site_name }} — {{ site_tagline }}
         {% endblock %}
     </title>
+
+
+    <!-- =====================================================
+         FAVICON
+    ====================================================== -->
+
+    <link
+        rel="icon"
+        type="image/png"
+        href="{{ url_for('static', filename='images/logo.png') }}"
+    >
 
 
     <!-- =====================================================
@@ -59,7 +69,7 @@
 
 
     <!-- =====================================================
-         MAIN CSS
+         MAIN STYLESHEET
     ====================================================== -->
 
     <link
@@ -68,6 +78,10 @@
     >
 
 
+    <!-- =====================================================
+         PAGE-SPECIFIC HEAD
+    ====================================================== -->
+
     {% block head %}{% endblock %}
 
 </head>
@@ -75,12 +89,36 @@
 
 <body>
 
+<!-- =========================================================
+     PAGE LOADER
+========================================================== -->
+
+<div
+    class="page-loader"
+    id="pageLoader"
+    aria-hidden="true"
+>
+
+    <div class="loader-logo">
+        <img
+            src="{{ url_for('static', filename='images/logo.png') }}"
+            alt=""
+        >
+    </div>
+
+    <div class="loader-ring"></div>
+
+</div>
+
 
 <!-- =========================================================
      HEADER
-========================================================= -->
+========================================================== -->
 
-<header class="site-header">
+<header
+    class="site-header"
+    id="siteHeader"
+>
 
     <nav
         class="navbar"
@@ -100,9 +138,20 @@
                 aria-label="M1000 Home"
             >
 
-                <div class="brand-mark">
-                    M
-                </div>
+                <span class="brand-logo-wrap">
+
+                    <img
+                        src="{{ url_for(
+                            'static',
+                            filename='images/logo.png'
+                        ) }}"
+                        alt="M1000"
+                        class="brand-logo"
+                        width="40"
+                        height="40"
+                    >
+
+                </span>
 
                 <span class="brand-text">
                     M1000
@@ -115,8 +164,10 @@
                  DESKTOP NAVIGATION
             ================================================== -->
 
-            <div class="desktop-nav">
-
+            <div
+                class="desktop-nav"
+                role="navigation"
+            >
 
                 <a
                     href="{{ url_for('home') }}"
@@ -124,7 +175,6 @@
                 >
                     Home
                 </a>
-
 
                 <a
                     href="{{ url_for(
@@ -136,7 +186,6 @@
                     Tamil HD
                 </a>
 
-
                 <a
                     href="{{ url_for(
                         'category',
@@ -146,7 +195,6 @@
                 >
                     New Movies
                 </a>
-
 
                 <a
                     href="{{ url_for(
@@ -158,7 +206,6 @@
                     Dubbed
                 </a>
 
-
                 <a
                     href="{{ url_for(
                         'category',
@@ -169,27 +216,19 @@
                     Web Series
                 </a>
 
-
-                <a
-                    href="{{ url_for('movies') }}"
-                    class="nav-link"
-                >
-                    All Movies
-                </a>
-
             </div>
 
 
             <!-- =================================================
-                 RIGHT ACTIONS
+                 NAV ACTIONS
             ================================================== -->
 
             <div class="nav-actions">
 
 
-                <!-- =================================================
+                <!-- =============================================
                      DESKTOP SEARCH
-                ================================================== -->
+                ============================================== -->
 
                 <form
                     action="{{ url_for('search') }}"
@@ -202,11 +241,13 @@
                         class="search-icon"
                         aria-hidden="true"
                     >
+
                         <svg
                             viewBox="0 0 24 24"
                             width="18"
                             height="18"
                         >
+
                             <circle
                                 cx="11"
                                 cy="11"
@@ -223,33 +264,43 @@
                                 stroke-width="2"
                                 stroke-linecap="round"
                             />
+
                         </svg>
+
                     </span>
 
 
                     <input
                         type="search"
                         name="q"
-                        value="{{ request.args.get('q', '') }}"
                         placeholder="Search movies..."
                         autocomplete="off"
+                        maxlength="100"
                         aria-label="Search movies"
                     >
+
+
+                    <button
+                        type="submit"
+                        aria-label="Submit search"
+                    >
+                        Search
+                    </button>
 
                 </form>
 
 
-                <!-- =================================================
+                <!-- =============================================
                      MOBILE SEARCH BUTTON
-                ================================================== -->
+                ============================================== -->
 
                 <button
                     type="button"
                     class="mobile-search-button"
-                    id="mobile-search-button"
+                    id="mobileSearchButton"
                     aria-label="Open search"
                     aria-expanded="false"
-                    aria-controls="mobile-search-panel"
+                    aria-controls="mobileSearchPanel"
                 >
 
                     <svg
@@ -281,17 +332,17 @@
                 </button>
 
 
-                <!-- =================================================
+                <!-- =============================================
                      MOBILE MENU BUTTON
-                ================================================== -->
+                ============================================== -->
 
                 <button
                     type="button"
                     class="mobile-menu-button"
-                    id="mobile-menu-button"
+                    id="mobileMenuButton"
                     aria-label="Open navigation menu"
                     aria-expanded="false"
-                    aria-controls="mobile-menu"
+                    aria-controls="mobileMenu"
                 >
 
                     <span></span>
@@ -305,13 +356,14 @@
         </div>
 
 
-        <!-- =====================================================
+        <!-- =================================================
              MOBILE SEARCH PANEL
-        ====================================================== -->
+        ================================================== -->
 
         <div
             class="mobile-search-panel"
-            id="mobile-search-panel"
+            id="mobileSearchPanel"
+            aria-hidden="true"
         >
 
             <form
@@ -352,8 +404,9 @@
                     <input
                         type="search"
                         name="q"
-                        placeholder="Search movies & web series..."
+                        placeholder="Search movies & series..."
                         autocomplete="off"
+                        maxlength="100"
                         aria-label="Search movies and web series"
                     >
 
@@ -362,7 +415,7 @@
 
                 <button
                     type="submit"
-                    class="search-submit"
+                    class="mobile-search-submit"
                 >
                     Search
                 </button>
@@ -371,342 +424,290 @@
 
         </div>
 
+
+        <!-- =================================================
+             MOBILE SIDE MENU
+        ================================================== -->
+
+        <aside
+            class="mobile-menu"
+            id="mobileMenu"
+            aria-hidden="true"
+        >
+
+            <!-- MENU HEADER -->
+
+            <div class="mobile-menu-header">
+
+                <a
+                    href="{{ url_for('home') }}"
+                    class="mobile-menu-brand"
+                >
+
+                    <img
+                        src="{{ url_for(
+                            'static',
+                            filename='images/logo.png'
+                        ) }}"
+                        alt="M1000"
+                    >
+
+                    <span>
+                        M1000
+                    </span>
+
+                </a>
+
+
+                <button
+                    type="button"
+                    class="close-menu"
+                    id="closeMenu"
+                    aria-label="Close navigation menu"
+                >
+                    ×
+                </button>
+
+            </div>
+
+
+            <!-- MENU LINKS -->
+
+            <div class="mobile-menu-inner">
+
+
+                <div class="mobile-menu-label">
+                    BROWSE
+                </div>
+
+
+                <a
+                    href="{{ url_for('home') }}"
+                    class="mobile-nav-link"
+                >
+
+                    <span class="mobile-nav-icon">
+                        ⌂
+                    </span>
+
+                    <span>
+                        Home
+                    </span>
+
+                </a>
+
+
+                <a
+                    href="{{ url_for(
+                        'category',
+                        category_name='Tamil HD Movies'
+                    ) }}"
+                    class="mobile-nav-link"
+                >
+
+                    <span class="mobile-nav-icon">
+                        HD
+                    </span>
+
+                    <span>
+                        Tamil HD Movies
+                    </span>
+
+                </a>
+
+
+                <a
+                    href="{{ url_for(
+                        'category',
+                        category_name='Tamil New Movies'
+                    ) }}"
+                    class="mobile-nav-link"
+                >
+
+                    <span class="mobile-nav-icon">
+                        NEW
+                    </span>
+
+                    <span>
+                        New Movies
+                    </span>
+
+                </a>
+
+
+                <a
+                    href="{{ url_for(
+                        'category',
+                        category_name='Tamil Dubbed Movies'
+                    ) }}"
+                    class="mobile-nav-link"
+                >
+
+                    <span class="mobile-nav-icon">
+                        DUB
+                    </span>
+
+                    <span>
+                        Dubbed Movies
+                    </span>
+
+                </a>
+
+
+                <a
+                    href="{{ url_for(
+                        'category',
+                        category_name='Web Series'
+                    ) }}"
+                    class="mobile-nav-link"
+                >
+
+                    <span class="mobile-nav-icon">
+                        ▶
+                    </span>
+
+                    <span>
+                        Web Series
+                    </span>
+
+                </a>
+
+
+                <a
+                    href="{{ url_for('all_movies') }}"
+                    class="mobile-nav-link"
+                >
+
+                    <span class="mobile-nav-icon">
+                        +
+                    </span>
+
+                    <span>
+                        All Movies
+                    </span>
+
+                </a>
+
+
+                <!-- MENU DIVIDER -->
+
+                <div class="mobile-menu-divider"></div>
+
+
+                <div class="mobile-menu-label">
+                    INFORMATION
+                </div>
+
+
+                <a
+                    href="#"
+                    class="mobile-nav-link"
+                >
+
+                    <span class="mobile-nav-icon">
+                        ℹ
+                    </span>
+
+                    <span>
+                        About M1000
+                    </span>
+
+                </a>
+
+            </div>
+
+
+            <!-- MENU FOOTER -->
+
+            <div class="mobile-menu-footer">
+
+                <span>
+                    © {{ current_year }} M1000
+                </span>
+
+                <span>
+                    Entertainment
+                </span>
+
+            </div>
+
+        </aside>
+
+
+        <!-- =================================================
+             MENU OVERLAY
+        ================================================== -->
+
+        <div
+            class="menu-overlay"
+            id="menuOverlay"
+            aria-hidden="true"
+        ></div>
+
     </nav>
 
 </header>
 
 
 <!-- =========================================================
-     MOBILE SIDE MENU
-========================================================= -->
+     TOP ADVERTISEMENT SLOT
+     
+     IMPORTANT:
+     Paste only your authorized Adsterra ad script/code
+     inside this container.
+========================================================== -->
+
+{% block top_ad %}
 
 <div
-    class="menu-overlay"
-    id="menu-overlay"
-    aria-hidden="true"
-></div>
-
-
-<aside
-    class="mobile-menu"
-    id="mobile-menu"
-    aria-label="Mobile navigation"
+    class="ad-container site-top-ad"
+    id="topAd"
 >
 
+    <span class="ad-label">
+        Advertisement
+    </span>
 
-    <!-- =====================================================
-         MOBILE MENU HEADER
-    ====================================================== -->
+    <div class="ad-content">
 
-    <div class="mobile-menu-header">
+        <!--
+        ======================================================
+        ADSTERRA CODE GOES HERE
 
-        <a
-            href="{{ url_for('home') }}"
-            class="mobile-brand"
-        >
+        Example placeholder only.
 
-            <span class="mobile-brand-mark">
-                M
-            </span>
+        Do NOT paste the ad code into app.py.
+        Put the actual Adsterra code here when available.
 
-            <span>
-                M1000
-            </span>
-
-        </a>
-
-
-        <button
-            type="button"
-            class="close-menu"
-            id="close-menu"
-            aria-label="Close navigation menu"
-        >
-            ×
-        </button>
-
-    </div>
-
-
-    <!-- =====================================================
-         MOBILE NAVIGATION
-    ====================================================== -->
-
-    <div class="mobile-menu-inner">
-
-
-        <a
-            href="{{ url_for('home') }}"
-            class="mobile-nav-link"
-        >
-
-            <span class="mobile-nav-icon">
-                ⌂
-            </span>
-
-            <span>
-                Home
-            </span>
-
-        </a>
-
-
-        <a
-            href="{{ url_for(
-                'category',
-                category_name='Tamil HD Movies'
-            ) }}"
-            class="mobile-nav-link"
-        >
-
-            <span class="mobile-nav-icon">
-                HD
-            </span>
-
-            <span>
-                Tamil HD Movies
-            </span>
-
-        </a>
-
-
-        <a
-            href="{{ url_for(
-                'category',
-                category_name='Tamil New Movies'
-            ) }}"
-            class="mobile-nav-link"
-        >
-
-            <span class="mobile-nav-icon">
-                NEW
-            </span>
-
-            <span>
-                New Movies
-            </span>
-
-        </a>
-
-
-        <a
-            href="{{ url_for(
-                'category',
-                category_name='Tamil Dubbed Movies'
-            ) }}"
-            class="mobile-nav-link"
-        >
-
-            <span class="mobile-nav-icon">
-                DUB
-            </span>
-
-            <span>
-                Tamil Dubbed
-            </span>
-
-        </a>
-
-
-        <a
-            href="{{ url_for(
-                'category',
-                category_name='Web Series'
-            ) }}"
-            class="mobile-nav-link"
-        >
-
-            <span class="mobile-nav-icon">
-                ▶
-            </span>
-
-            <span>
-                Web Series
-            </span>
-
-        </a>
-
-
-        <a
-            href="{{ url_for('movies') }}"
-            class="mobile-nav-link"
-        >
-
-            <span class="mobile-nav-icon">
-                ✦
-            </span>
-
-            <span>
-                All Movies
-            </span>
-
-        </a>
-
-
-        <!-- =================================================
-             MOBILE MENU DIVIDER
-        ================================================== -->
-
-        <div class="mobile-menu-divider"></div>
-
-
-        <!-- =================================================
-             MOBILE LEGAL LINKS
-        ================================================== -->
-
-        <a
-            href="{{ url_for('about') }}"
-            class="mobile-nav-link secondary"
-        >
-
-            <span class="mobile-nav-icon">
-                i
-            </span>
-
-            <span>
-                About
-            </span>
-
-        </a>
-
-
-        <a
-            href="{{ url_for('privacy') }}"
-            class="mobile-nav-link secondary"
-        >
-
-            <span class="mobile-nav-icon">
-                •
-            </span>
-
-            <span>
-                Privacy Policy
-            </span>
-
-        </a>
-
-
-        <a
-            href="{{ url_for('dmca') }}"
-            class="mobile-nav-link secondary"
-        >
-
-            <span class="mobile-nav-icon">
-                ©
-            </span>
-
-            <span>
-                Copyright / DMCA
-            </span>
-
-        </a>
-
-    </div>
-
-</aside>
-
-
-<!-- =========================================================
-     TOP ADVERTISEMENT
-========================================================= -->
-
-<div class="site-top-ad">
-
-    <div class="ad-container desktop-ad">
-
-        <span class="ad-label">
-            Advertisement
-        </span>
-
-
-        <!-- =================================================
-             ADSTERRA DESKTOP AD
-
-             Paste your Adsterra code here.
-
-             Example:
-
-             <script async ...>
-                 YOUR_ADSTERRA_CODE
-             </script>
-
-             DO NOT use example code as a real ad.
-        ================================================== -->
-
-        <div
-            class="ad-slot adsterra-desktop"
-            id="adsterra-desktop-top"
-        ></div>
-
-    </div>
-
-
-    <div class="ad-container mobile-ad">
-
-        <span class="ad-label">
-            Advertisement
-        </span>
-
-
-        <!-- =================================================
-             ADSTERRA MOBILE AD
-        ================================================== -->
-
-        <div
-            class="ad-slot adsterra-mobile"
-            id="adsterra-mobile-top"
-        ></div>
+        ======================================================
+        -->
 
     </div>
 
 </div>
 
+{% endblock %}
+
 
 <!-- =========================================================
      MAIN CONTENT
-========================================================= -->
+========================================================== -->
 
-<main id="main-content">
+<main
+    id="main-content"
+    class="main-content"
+>
 
-
-    {% block content %}
-
-    <!-- Page content goes here -->
-
-    {% endblock %}
-
+    {% block content %}{% endblock %}
 
 </main>
 
 
 <!-- =========================================================
-     BOTTOM AD
-========================================================= -->
-
-<div class="site-bottom-ad">
-
-    <div class="ad-container desktop-ad">
-
-        <span class="ad-label">
-            Advertisement
-        </span>
-
-        <div
-            class="ad-slot adsterra-desktop"
-            id="adsterra-desktop-bottom"
-        ></div>
-
-    </div>
-
-</div>
-
-
-<!-- =========================================================
      FOOTER
-========================================================= -->
+========================================================== -->
 
 <footer class="site-footer">
-
 
     <div class="footer-main">
 
@@ -722,9 +723,13 @@
                 class="footer-logo"
             >
 
-                <span class="footer-logo-mark">
-                    M
-                </span>
+                <img
+                    src="{{ url_for(
+                        'static',
+                        filename='images/logo.png'
+                    ) }}"
+                    alt="M1000"
+                >
 
                 <span>
                     M1000
@@ -734,15 +739,14 @@
 
 
             <p>
-                Your entertainment destination for
-                movies and web series.
+                Movies. Series. Endless entertainment.
             </p>
 
         </div>
 
 
         <!-- =================================================
-             MOVIE LINKS
+             BROWSE
         ================================================== -->
 
         <div class="footer-column">
@@ -751,13 +755,9 @@
                 Browse
             </h3>
 
-
-            <a
-                href="{{ url_for('movies') }}"
-            >
-                All Movies
+            <a href="{{ url_for('home') }}">
+                Home
             </a>
-
 
             <a
                 href="{{ url_for(
@@ -768,7 +768,6 @@
                 Tamil HD
             </a>
 
-
             <a
                 href="{{ url_for(
                     'category',
@@ -777,7 +776,6 @@
             >
                 New Movies
             </a>
-
 
             <a
                 href="{{ url_for(
@@ -792,41 +790,25 @@
 
 
         <!-- =================================================
-             INFORMATION LINKS
+             INFORMATION
         ================================================== -->
 
         <div class="footer-column">
 
             <h3>
-                Information
+                M1000
             </h3>
 
-
-            <a
-                href="{{ url_for('about') }}"
-            >
-                About
+            <a href="{{ url_for('all_movies') }}">
+                All Movies
             </a>
 
-
-            <a
-                href="{{ url_for('privacy') }}"
-            >
-                Privacy Policy
+            <a href="{{ url_for('home') }}">
+                Latest Releases
             </a>
 
-
-            <a
-                href="{{ url_for('terms') }}"
-            >
-                Terms
-            </a>
-
-
-            <a
-                href="{{ url_for('dmca') }}"
-            >
-                Copyright / DMCA
+            <a href="{{ url_for('home') }}">
+                Popular
             </a>
 
         </div>
@@ -841,13 +823,15 @@
     <div class="footer-bottom">
 
         <p>
-            © {{ current_year }} M1000.
-            All rights reserved.
+            ©
+            <span data-current-year>
+                {{ current_year }}
+            </span>
+            M1000. All rights reserved.
         </p>
 
-
         <p>
-            Built for entertainment.
+            Built for cinematic experiences.
         </p>
 
     </div>
@@ -856,32 +840,24 @@
 
 
 <!-- =========================================================
-     BACK TO TOP
-========================================================= -->
-
-<button
-    type="button"
-    id="back-to-top"
-    class="back-to-top"
-    aria-label="Back to top"
->
-    ↑
-</button>
-
-
-<!-- =========================================================
-     JAVASCRIPT
-========================================================= -->
+     MAIN JAVASCRIPT
+========================================================== -->
 
 <script
-    src="{{ url_for('static', filename='js/app.js') }}"
+    src="{{ url_for(
+        'static',
+        filename='js/app.js'
+    ) }}"
     defer
 ></script>
 
+
+<!-- =========================================================
+     PAGE-SPECIFIC JAVASCRIPT
+========================================================== -->
 
 {% block scripts %}{% endblock %}
 
 
 </body>
-
-</html>
+</html> 

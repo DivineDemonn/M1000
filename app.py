@@ -1,17 +1,16 @@
 # ============================================================
 # M1000 — FLASK APPLICATION
-# Netflix-inspired Movie Website
+# Netflix-Inspired Movie Website
+# Yellow + Black Edition
 # ============================================================
 
-from flask import (
-    Flask,
-    render_template,
-    request,
-    abort,
-)
+from __future__ import annotations
 
-from pathlib import Path
 import json
+from pathlib import Path
+from typing import Any
+
+from flask import Flask, abort, render_template, request
 
 
 # ============================================================
@@ -20,7 +19,8 @@ import json
 
 BASE_DIR = Path(__file__).resolve().parent
 
-DATA_FILE = BASE_DIR / "data" / "movies.json"
+DATA_DIR = BASE_DIR / "data"
+MOVIES_FILE = DATA_DIR / "movies.json"
 
 
 app = Flask(
@@ -31,165 +31,163 @@ app = Flask(
 
 
 app.config.update(
-    SECRET_KEY="m1000-change-this-secret-key",
-
-    # Prevent unnecessary JSON caching while developing.
-    JSON_SORT_KEYS=False,
-
-    # Keep templates easier to update during development.
+    JSON_AS_ASCII=False,
     TEMPLATES_AUTO_RELOAD=True,
 )
 
 
 # ============================================================
-# DATA HELPERS
+# DATA LOADING
 # ============================================================
 
-def load_movies():
+def load_movies() -> list[dict[str, Any]]:
     """
     Load movie information from data/movies.json.
 
-    Expected JSON structure:
+    Expected format:
 
     {
         "movies": [
             {
                 "id": "movie-id",
                 "title": "Movie Title",
+                "poster": "https://example.com/poster.jpg",
+                "backdrop": "https://example.com/backdrop.jpg",
                 "year": 2026,
-                "poster": "https://...",
-                "backdrop": "https://...",
                 "category": "Tamil HD Movies",
-                "type": "Movie",
-                "quality": ["720p", "480p"],
-                "description": "..."
+                "description": "...",
+                "downloads": []
             }
         ]
     }
     """
 
-    if not DATA_FILE.exists():
+    if not MOVIES_FILE.exists():
+        print(f"[ERROR] Movie database not found: {MOVIES_FILE}")
         return []
 
     try:
-        with DATA_FILE.open(
+        with MOVIES_FILE.open(
             "r",
             encoding="utf-8",
         ) as file:
 
             data = json.load(file)
 
-    except (
-        json.JSONDecodeError,
-        OSError,
-    ):
+    except json.JSONDecodeError as error:
+        print(
+            "[ERROR] Invalid movies.json:",
+            error,
+        )
         return []
 
-    if isinstance(data, list):
-        return data
+    except OSError as error:
+        print(
+            "[ERROR] Unable to read movies.json:",
+            error,
+        )
+        return []
+
+    # --------------------------------------------------------
+    # Support both:
+    #
+    # { "movies": [...] }
+    #
+    # and:
+    #
+    # [...]
+    # --------------------------------------------------------
 
     if isinstance(data, dict):
+
         movies = data.get("movies", [])
 
-        if isinstance(movies, list):
-            return movies
+    elif isinstance(data, list):
 
-    return []
+        movies = data
+
+    else:
+
+        movies = []
+
+    if not isinstance(movies, list):
+        return []
+
+    # Keep only valid dictionary records.
+    return [
+        movie
+        for movie in movies
+        if isinstance(movie, dict)
+    ]
 
 
-def get_movie_by_id(movie_id):
+# ============================================================
+# MOVIE DATABASE
+# ============================================================
+
+def get_movies() -> list[dict[str, Any]]:
     """
-    Find one movie using its unique ID.
+    Return the current movie collection.
+
+    The JSON file is loaded per request so you can update
+    movies.json without restarting the application during
+    development.
     """
 
-    movies = load_movies()
+    return load_movies()
 
-    for movie in movies:
 
-        if str(movie.get("id", "")) == str(movie_id):
+# ============================================================
+# MOVIE HELPERS
+# ============================================================
+
+def get_movie_by_id(
+    movie_id: str,
+) -> dict[str, Any] | None:
+
+    movie_id = str(movie_id).strip()
+
+    for movie in get_movies():
+
+        current_id = str(
+            movie.get("id", "")
+        ).strip()
+
+        if current_id == movie_id:
             return movie
 
     return None
 
 
-# ============================================================
-# DATA NORMALIZATION
-# ============================================================
+def get_categories(
+    movies: list[dict[str, Any]],
+) -> list[str]:
 
-def normalize_movie(movie):
-    """
-    Make sure templates always receive predictable values.
-    """
+    categories: set[str] = set()
 
-    movie = dict(movie)
+    for movie in movies:
 
-    movie.setdefault(
-        "id",
-        "",
+        category = movie.get("category")
+
+        if isinstance(category, str):
+
+            category = category.strip()
+
+            if category:
+                categories.add(category)
+
+    return sorted(
+        categories,
+        key=str.lower,
     )
 
-    movie.setdefault(
-        "title",
-        "Untitled",
-    )
 
-    movie.setdefault(
-        "year",
-        "",
-    )
+def normalize_text(value: Any) -> str:
 
-    movie.setdefault(
-        "category",
-        "Movies",
-    )
+    if value is None:
+        return ""
 
-    movie.setdefault(
-        "type",
-        "Movie",
-    )
-
-    movie.setdefault(
-        "description",
-        "No description available.",
-    )
-
-    movie.setdefault(
-        "poster",
-        "",
-    )
-
-    movie.setdefault(
-        "backdrop",
-        movie.get("poster", ""),
-    )
-
-    movie.setdefault(
-        "quality",
-        [],
-    )
-
-    movie.setdefault(
-        "screenshots",
-        [],
-    )
-
-    movie.setdefault(
-        "downloads",
-        [],
-    )
-
-    return movie
-
-
-def normalized_movies():
-    """
-    Return all movies in a template-safe format.
-    """
-
-    return [
-        normalize_movie(movie)
-        for movie in load_movies()
-    ]
+    return str(value).strip().lower()
 
 
 # ============================================================
@@ -198,56 +196,61 @@ def normalized_movies():
 
 @app.route("/")
 def home():
-    """
-    M1000 homepage.
-    """
 
-    movies = normalized_movies()
+    movies = get_movies()
 
-    featured = movies[:1]
+    categories = get_categories(movies)
 
-    latest = movies[:12]
+    # --------------------------------------------------------
+    # Featured movie
+    # --------------------------------------------------------
 
-    tamil_hd = [
+    featured = None
+
+    for movie in movies:
+
+        if movie.get("featured") is True:
+            featured = movie
+            break
+
+    # If no featured movie is defined,
+    # use the first movie.
+    if featured is None and movies:
+        featured = movies[0]
+
+    # --------------------------------------------------------
+    # Newest movies
+    # --------------------------------------------------------
+
+    newest_movies = sorted(
+        movies,
+        key=lambda movie: str(
+            movie.get("added_date", "")
+        ),
+        reverse=True,
+    )
+
+    # --------------------------------------------------------
+    # Popular movies
+    # --------------------------------------------------------
+
+    popular_movies = [
         movie
         for movie in movies
-        if movie.get("category") == "Tamil HD Movies"
-    ][:12]
+        if movie.get("popular") is True
+    ]
 
-    new_movies = [
-        movie
-        for movie in movies
-        if movie.get("category") == "Tamil New Movies"
-    ][:12]
-
-    dubbed = [
-        movie
-        for movie in movies
-        if movie.get("category") == "Tamil Dubbed Movies"
-    ][:12]
-
-    web_series = [
-        movie
-        for movie in movies
-        if movie.get("category") == "Web Series"
-    ][:12]
+    # Fallback when no movies are marked popular.
+    if not popular_movies:
+        popular_movies = movies[:12]
 
     return render_template(
         "home.html",
-
         movies=movies,
-
         featured=featured,
-
-        latest=latest,
-
-        tamil_hd=tamil_hd,
-
-        new_movies=new_movies,
-
-        dubbed=dubbed,
-
-        web_series=web_series,
+        newest_movies=newest_movies[:12],
+        popular_movies=popular_movies[:12],
+        categories=categories,
     )
 
 
@@ -256,53 +259,83 @@ def home():
 # ============================================================
 
 @app.route("/movie/<movie_id>")
-def movie_detail(movie_id):
-    """
-    Display an individual movie/series page.
-    """
+def movie_detail(movie_id: str):
 
     movie = get_movie_by_id(movie_id)
 
     if movie is None:
         abort(404)
 
-    movie = normalize_movie(movie)
+    # --------------------------------------------------------
+    # Similar movies
+    # --------------------------------------------------------
+
+    category = normalize_text(
+        movie.get("category")
+    )
+
+    similar_movies = []
+
+    for item in get_movies():
+
+        if str(item.get("id", "")) == str(movie_id):
+            continue
+
+        if normalize_text(
+            item.get("category")
+        ) == category:
+
+            similar_movies.append(item)
 
     return render_template(
         "movie.html",
         movie=movie,
+        similar_movies=similar_movies[:8],
     )
 
 
 # ============================================================
-# CATEGORY
+# CATEGORY PAGE
 # ============================================================
 
 @app.route("/category/<path:category_name>")
-def category(category_name):
-    """
-    Display movies belonging to a category.
+def category(category_name: str):
 
-    Example:
+    movies = get_movies()
 
-    /category/Tamil%20HD%20Movies
-    """
+    requested_category = normalize_text(
+        category_name
+    )
 
-    movies = [
+    filtered_movies = [
         movie
-        for movie in normalized_movies()
-        if str(
-            movie.get("category", "")
-        ).casefold()
-        == category_name.casefold()
+        for movie in movies
+        if normalize_text(
+            movie.get("category")
+        ) == requested_category
     ]
+
+    # Keep the original display name when possible.
+    display_category = category_name
+
+    for movie in movies:
+
+        category_value = movie.get("category")
+
+        if normalize_text(
+            category_value
+        ) == requested_category:
+
+            display_category = str(
+                category_value
+            )
+
+            break
 
     return render_template(
         "category.html",
-
-        movies=movies,
-
-        category_name=category_name,
+        movies=filtered_movies,
+        category_name=display_category,
     )
 
 
@@ -312,43 +345,58 @@ def category(category_name):
 
 @app.route("/search")
 def search():
-    """
-    Search movies by title, category,
-    year, genre, or description.
-    """
 
     query = request.args.get(
         "q",
         "",
-        type=str,
     ).strip()
+
+    movies = get_movies()
+
+    if not query:
+
+        return render_template(
+            "search.html",
+            movies=[],
+            query="",
+        )
+
+    # Prevent unnecessarily large queries.
+    query = query[:100]
+
+    search_text = query.lower()
 
     results = []
 
-    if query:
+    for movie in movies:
 
-        search_text = query.casefold()
+        searchable_fields = [
 
-        for movie in normalized_movies():
+            movie.get("title", ""),
 
-            searchable = " ".join(
-                [
-                    str(movie.get("title", "")),
-                    str(movie.get("category", "")),
-                    str(movie.get("genre", "")),
-                    str(movie.get("year", "")),
-                    str(movie.get("description", "")),
-                ]
-            ).casefold()
+            movie.get("description", ""),
 
-            if search_text in searchable:
-                results.append(movie)
+            movie.get("category", ""),
+
+            movie.get("language", ""),
+
+            movie.get("genre", ""),
+
+            movie.get("year", ""),
+        ]
+
+        combined_text = " ".join(
+            str(value)
+            for value in searchable_fields
+        ).lower()
+
+        if search_text in combined_text:
+
+            results.append(movie)
 
     return render_template(
         "search.html",
-
         movies=results,
-
         query=query,
     )
 
@@ -358,64 +406,34 @@ def search():
 # ============================================================
 
 @app.route("/movies")
-def movies():
-    """
-    Display the complete movie catalogue.
-    """
+def all_movies():
 
-    all_movies = normalized_movies()
+    movies = get_movies()
 
     return render_template(
         "category.html",
-
-        movies=all_movies,
-
+        movies=movies,
         category_name="All Movies",
     )
 
 
 # ============================================================
-# LEGAL PAGES
+# HEALTH CHECK
 # ============================================================
 
-@app.route("/about")
-def about():
+@app.route("/health")
+def health():
 
-    return render_template(
-        "legal.html",
-        page_title="About M1000",
-    )
+    movies = get_movies()
 
-
-@app.route("/privacy")
-def privacy():
-
-    return render_template(
-        "legal.html",
-        page_title="Privacy Policy",
-    )
-
-
-@app.route("/terms")
-def terms():
-
-    return render_template(
-        "legal.html",
-        page_title="Terms & Conditions",
-    )
-
-
-@app.route("/dmca")
-def dmca():
-
-    return render_template(
-        "legal.html",
-        page_title="Copyright / DMCA",
-    )
+    return {
+        "status": "ok",
+        "movies": len(movies),
+    }
 
 
 # ============================================================
-# ERROR HANDLERS
+# 404 ERROR
 # ============================================================
 
 @app.errorhandler(404)
@@ -426,11 +444,15 @@ def page_not_found(error):
     ), 404
 
 
+# ============================================================
+# 500 ERROR
+# ============================================================
+
 @app.errorhandler(500)
 def internal_server_error(error):
 
     return render_template(
-        "500.html"
+        "404.html"
     ), 500
 
 
@@ -440,21 +462,11 @@ def internal_server_error(error):
 
 @app.context_processor
 def inject_globals():
-    """
-    Variables available inside every template.
-    """
 
     return {
         "site_name": "M1000",
-
-        "site_description":
-            "Discover movies and web series on M1000.",
-
-        "current_year":
-            __import__("datetime")
-            .datetime
-            .now()
-            .year,
+        "site_tagline": "Movies. Series. Endless Entertainment.",
+        "current_year": 2026,
     }
 
 
@@ -463,6 +475,16 @@ def inject_globals():
 # ============================================================
 
 if __name__ == "__main__":
+
+    print()
+    print("=" * 60)
+    print("M1000 — Yellow & Black Streaming UI")
+    print("=" * 60)
+    print(f"Database: {MOVIES_FILE}")
+    print(f"Database exists: {MOVIES_FILE.exists()}")
+    print(f"Movies loaded: {len(get_movies())}")
+    print("=" * 60)
+    print()
 
     app.run(
         host="0.0.0.0",

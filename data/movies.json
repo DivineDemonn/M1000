@@ -6,7 +6,7 @@
     "year": 2026,
     "type": "movie",
 
-    "category": "Tamil New Movies",
+    "category": "New Movies",
     "language": "Tamil",
 
     "genre": [
@@ -32,7 +32,8 @@
     "screenshots": [
       "https://graph.org/file/c64ceabae703aafb41f6a-eea6456a16208040d2.jpg",
       "https://graph.org/file/15fce59fc340a0136f643-dd7b450355e4e8d437.jpg",
-      "https://graph.org/file/baddcc7f122a91bf77555-3ac00fb19464b7f52f.jpg"
+      "https://graph.org/file/baddcc7f122a91bf77555-3ac00fb19464b7f52f.jpg",
+      "https://graph.org/file/e334563181170d0416802-1e467d2465d2613b34.jpg"
     ],
 
     "downloads": [

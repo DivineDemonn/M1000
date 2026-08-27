@@ -1,9 +1,13 @@
 ```python
+# ============================================================
+# M1000 — FLASK APPLICATION
+# Netflix-Inspired Movie Website
+# Yellow + Black Edition
+# ============================================================
+
 from __future__ import annotations
 
 import json
-import os
-import re
 from pathlib import Path
 from typing import Any
 
@@ -11,7 +15,7 @@ from flask import Flask, abort, render_template, request
 
 
 # ============================================================
-# CONFIGURATION
+# APPLICATION CONFIGURATION
 # ============================================================
 
 BASE_DIR = Path(__file__).resolve().parent
@@ -33,14 +37,40 @@ app.config.update(
 
 
 # ============================================================
-# LOAD MOVIES
+# DATA LOADING
 # ============================================================
 
 def load_movies() -> list[dict[str, Any]]:
-    """Load movie data from data/movies.json."""
+    """
+    Load movies from:
+
+        data/movies.json
+
+    Supported formats:
+
+    1. Direct list:
+
+        [
+            {
+                "id": "movie-001",
+                "title": "Toxic"
+            }
+        ]
+
+    2. Object containing movies:
+
+        {
+            "movies": [
+                {
+                    "id": "movie-001",
+                    "title": "Toxic"
+                }
+            ]
+        }
+    """
 
     if not MOVIES_FILE.exists():
-        print(f"[ERROR] File not found: {MOVIES_FILE}")
+        print(f"[ERROR] Movie database not found: {MOVIES_FILE}")
         return []
 
     try:
@@ -48,33 +78,31 @@ def load_movies() -> list[dict[str, Any]]:
             data = json.load(file)
 
     except json.JSONDecodeError as error:
-        print(f"[ERROR] Invalid JSON: {error}")
+        print(f"[ERROR] Invalid movies.json: {error}")
         return []
 
     except OSError as error:
-        print(f"[ERROR] Cannot read movies.json: {error}")
+        print(f"[ERROR] Unable to read movies.json: {error}")
         return []
 
-    # Support:
+    # --------------------------------------------------------
+    # Accept both:
     #
-    # [
-    #   {...}
-    # ]
+    # { "movies": [...] }
     #
     # and:
     #
-    # {
-    #   "movies": [...]
-    # }
+    # [...]
+    # --------------------------------------------------------
 
-    if isinstance(data, list):
-        movies = data
-
-    elif isinstance(data, dict):
+    if isinstance(data, dict):
         movies = data.get("movies", [])
 
+    elif isinstance(data, list):
+        movies = data
+
     else:
-        print("[ERROR] movies.json must contain a list or object.")
+        print("[ERROR] movies.json must contain a list or a movies object.")
         return []
 
     if not isinstance(movies, list):
@@ -85,14 +113,25 @@ def load_movies() -> list[dict[str, Any]]:
 
     for movie in movies:
         if isinstance(movie, dict):
-            if movie.get("id"):
-                valid_movies.append(movie)
+            valid_movies.append(movie)
+
+    print(f"[INFO] Loaded {len(valid_movies)} movies.")
 
     return valid_movies
 
 
+# ============================================================
+# MOVIE DATABASE
+# ============================================================
+
 def get_movies() -> list[dict[str, Any]]:
-    """Return the latest movie database."""
+    """
+    Reload movies.json every request.
+
+    This means updating movies.json does not require
+    restarting Flask during development.
+    """
+
     return load_movies()
 
 
@@ -101,97 +140,41 @@ def get_movies() -> list[dict[str, Any]]:
 # ============================================================
 
 def normalize_text(value: Any) -> str:
-    """Normalize text for reliable searching."""
+    """
+    Convert any value to clean lowercase searchable text.
+    """
 
     if value is None:
         return ""
 
-    text = str(value).lower().strip()
-
-    # Keep English and Tamil characters.
-    text = re.sub(
-        r"[^a-z0-9\u0B80-\u0BFF]+",
-        " ",
-        text,
+    return " ".join(
+        str(value)
+        .strip()
+        .lower()
+        .split()
     )
 
-    text = re.sub(
-        r"\s+",
-        " ",
-        text,
-    )
 
-    return text.strip()
+def searchable_genre(movie: dict[str, Any]) -> str:
+    """
+    Handle genre when it is either:
 
+        ["Action", "Thriller"]
 
-def searchable_value(value: Any) -> str:
-    """Convert strings/lists/dicts into searchable text."""
+    or:
 
-    if value is None:
-        return ""
+        "Action, Thriller"
+    """
 
-    if isinstance(value, list):
+    genre = movie.get("genre", "")
+
+    if isinstance(genre, list):
         return " ".join(
-            searchable_value(item)
-            for item in value
+            normalize_text(item)
+            for item in genre
         )
 
-    if isinstance(value, dict):
-        return " ".join(
-            searchable_value(item)
-            for item in value.values()
-        )
-
-    return normalize_text(value)
-
-
-# ============================================================
-# SEARCH
-# ============================================================
-
-def search_movies(
-    movies: list[dict[str, Any]],
-    query: str,
-) -> list[dict[str, Any]]:
-
-    query = normalize_text(query)
-
-    if not query:
-        return []
-
-    words = query.split()
-
-    results = []
-
-    for movie in movies:
-
-        fields = [
-            movie.get("title", ""),
-            movie.get("original_title", ""),
-            movie.get("description", ""),
-            movie.get("category", ""),
-            movie.get("language", ""),
-            movie.get("genre", ""),
-            movie.get("year", ""),
-            movie.get("type", ""),
-            movie.get("certificate", ""),
-        ]
-
-        combined = " ".join(
-            searchable_value(value)
-            for value in fields
-        )
-
-        # Full query match.
-        if query in combined:
-            results.append(movie)
-            continue
-
-        # Individual word match.
-        if all(word in combined for word in words):
-            results.append(movie)
-
-    return results
+    return normalize_text(genre)
 
 
 # ============================================================
@@ -202,13 +185,13 @@ def get_movie_by_id(
     movie_id: str,
 ) -> dict[str, Any] | None:
 
-    requested_id = str(movie_id).strip()
+    requested_id = normalize_text(movie_id)
 
     for movie in get_movies():
 
-        current_id = str(
+        current_id = normalize_text(
             movie.get("id", "")
-        ).strip()
+        )
 
         if current_id == requested_id:
             return movie
@@ -216,22 +199,26 @@ def get_movie_by_id(
     return None
 
 
+# ============================================================
+# CATEGORY HELPERS
+# ============================================================
+
 def get_categories(
     movies: list[dict[str, Any]],
 ) -> list[str]:
 
-    categories = set()
+    categories: set[str] = set()
 
     for movie in movies:
 
-        category_name = movie.get("category")
+        category_value = movie.get("category")
 
-        if isinstance(category_name, str):
+        if isinstance(category_value, str):
 
-            category_name = category_name.strip()
+            category_value = category_value.strip()
 
-            if category_name:
-                categories.add(category_name)
+            if category_value:
+                categories.add(category_value)
 
     return sorted(
         categories,
@@ -240,7 +227,7 @@ def get_categories(
 
 
 # ============================================================
-# HOME
+# HOME PAGE
 # ============================================================
 
 @app.route("/")
@@ -251,7 +238,7 @@ def home():
     categories = get_categories(movies)
 
     # --------------------------------------------------------
-    # Featured
+    # Featured movie
     # --------------------------------------------------------
 
     featured = None
@@ -259,7 +246,6 @@ def home():
     for movie in movies:
 
         if movie.get("featured") is True:
-
             featured = movie
             break
 
@@ -267,7 +253,7 @@ def home():
         featured = movies[0]
 
     # --------------------------------------------------------
-    # Newest
+    # Newest movies
     # --------------------------------------------------------
 
     newest_movies = sorted(
@@ -279,7 +265,7 @@ def home():
     )
 
     # --------------------------------------------------------
-    # Popular
+    # Popular movies
     # --------------------------------------------------------
 
     popular_movies = [
@@ -293,11 +279,18 @@ def home():
 
     return render_template(
         "home.html",
+
         movies=movies,
+
+        # Your current home.html uses both names
+        # in different versions, so provide both.
         featured=featured,
         featured_movie=featured,
+
         newest_movies=newest_movies[:12],
+
         popular_movies=popular_movies[:12],
+
         categories=categories,
     )
 
@@ -306,10 +299,7 @@ def home():
 # MOVIE DETAIL
 # ============================================================
 
-@app.route(
-    "/movie/<movie_id>",
-    endpoint="movie",
-)
+@app.route("/movie/<movie_id>")
 def movie_detail(movie_id: str):
 
     movie = get_movie_by_id(movie_id)
@@ -317,7 +307,11 @@ def movie_detail(movie_id: str):
     if movie is None:
         abort(404)
 
-    current_category = normalize_text(
+    # --------------------------------------------------------
+    # Similar movies
+    # --------------------------------------------------------
+
+    movie_category = normalize_text(
         movie.get("category")
     )
 
@@ -325,11 +319,11 @@ def movie_detail(movie_id: str):
 
     for item in get_movies():
 
-        item_id = str(
+        item_id = normalize_text(
             item.get("id", "")
-        ).strip()
+        )
 
-        if item_id == str(movie_id).strip():
+        if item_id == normalize_text(movie_id):
             continue
 
         item_category = normalize_text(
@@ -337,8 +331,8 @@ def movie_detail(movie_id: str):
         )
 
         if (
-            current_category
-            and item_category == current_category
+            movie_category
+            and item_category == movie_category
         ):
             similar_movies.append(item)
 
@@ -350,43 +344,113 @@ def movie_detail(movie_id: str):
 
 
 # ============================================================
-# CATEGORY
+# MOVIE ROUTE ALIAS
+# ============================================================
+#
+# IMPORTANT:
+#
+# Your templates currently use:
+#
+#     url_for('movie', movie_id=movie.id)
+#
+# But the original Flask function was:
+#
+#     movie_detail
+#
+# This alias prevents BuildError problems.
 # ============================================================
 
 @app.route(
-    "/category/<path:category_name>"
+    "/movie/<movie_id>",
+    endpoint="movie",
 )
+def movie_route_alias(movie_id: str):
+
+    movie = get_movie_by_id(movie_id)
+
+    if movie is None:
+        abort(404)
+
+    movie_category = normalize_text(
+        movie.get("category")
+    )
+
+    similar_movies = []
+
+    for item in get_movies():
+
+        item_id = normalize_text(
+            item.get("id", "")
+        )
+
+        if item_id == normalize_text(movie_id):
+            continue
+
+        if normalize_text(
+            item.get("category")
+        ) == movie_category:
+
+            similar_movies.append(item)
+
+    return render_template(
+        "movie.html",
+        movie=movie,
+        similar_movies=similar_movies[:8],
+    )
+
+
+# ============================================================
+# CATEGORY PAGE
+# ============================================================
+
+@app.route("/category/<path:category_name>")
 def category(category_name: str):
 
     movies = get_movies()
 
-    requested = normalize_text(
+    requested_category = normalize_text(
         category_name
     )
 
-    filtered_movies = [
-        movie
-        for movie in movies
-        if normalize_text(
-            movie.get("category")
-        ) == requested
-    ]
-
-    display_name = category_name
+    filtered_movies = []
 
     for movie in movies:
 
-        original = movie.get("category")
+        movie_category = normalize_text(
+            movie.get("category")
+        )
 
-        if normalize_text(original) == requested:
+        if movie_category == requested_category:
+            filtered_movies.append(movie)
 
-            display_name = str(original)
+    # --------------------------------------------------------
+    # Keep original capitalization
+    # --------------------------------------------------------
+
+    display_category = category_name
+
+    for movie in movies:
+
+        original_category = movie.get(
+            "category",
+            ""
+        )
+
+        if (
+            normalize_text(original_category)
+            == requested_category
+        ):
+
+            display_category = str(
+                original_category
+            )
+
             break
 
     return render_template(
         "category.html",
         movies=filtered_movies,
-        category_name=display_name,
+        category_name=display_category,
     )
 
 
@@ -400,11 +464,22 @@ def search():
     query = request.args.get(
         "q",
         "",
-    ).strip()
+    )
 
+    # --------------------------------------------------------
+    # Clean query
+    # --------------------------------------------------------
+
+    query = str(query).strip()
+
+    # Prevent huge search requests.
     query = query[:100]
 
     movies = get_movies()
+
+    # --------------------------------------------------------
+    # Empty search
+    # --------------------------------------------------------
 
     if not query:
 
@@ -414,14 +489,97 @@ def search():
             query="",
         )
 
-    results = search_movies(
-        movies,
-        query,
-    )
+    # --------------------------------------------------------
+    # Normalize search
+    # --------------------------------------------------------
+
+    search_text = normalize_text(query)
+
+    results = []
+
+    # --------------------------------------------------------
+    # Search every movie
+    # --------------------------------------------------------
+
+    for movie in movies:
+
+        title = normalize_text(
+            movie.get("title", "")
+        )
+
+        original_title = normalize_text(
+            movie.get("original_title", "")
+        )
+
+        description = normalize_text(
+            movie.get("description", "")
+        )
+
+        category_value = normalize_text(
+            movie.get("category", "")
+        )
+
+        language = normalize_text(
+            movie.get("language", "")
+        )
+
+        year = normalize_text(
+            movie.get("year", "")
+        )
+
+        genre = searchable_genre(movie)
+
+        movie_id = normalize_text(
+            movie.get("id", "")
+        )
+
+        # ----------------------------------------------------
+        # Combine searchable fields
+        # ----------------------------------------------------
+
+        searchable_text = " ".join(
+            [
+                title,
+                original_title,
+                description,
+                category_value,
+                language,
+                genre,
+                year,
+                movie_id,
+            ]
+        )
+
+        # ----------------------------------------------------
+        # Direct substring search
+        # ----------------------------------------------------
+
+        if search_text in searchable_text:
+            results.append(movie)
+            continue
+
+        # ----------------------------------------------------
+        # Multi-word search
+        #
+        # Example:
+        #
+        # "Toxic 2026"
+        #
+        # will match Toxic + 2026.
+        # ----------------------------------------------------
+
+        search_words = search_text.split()
+
+        if search_words:
+
+            if all(
+                word in searchable_text
+                for word in search_words
+            ):
+                results.append(movie)
 
     print(
-        f"[SEARCH] {query!r} -> "
-        f"{len(results)} result(s)"
+        f"[SEARCH] Query='{query}' Results={len(results)}"
     )
 
     return render_template(
@@ -463,7 +621,7 @@ def health():
 
 
 # ============================================================
-# 404
+# 404 ERROR
 # ============================================================
 
 @app.errorhandler(404)
@@ -475,7 +633,7 @@ def page_not_found(error):
 
 
 # ============================================================
-# 500
+# 500 ERROR
 # ============================================================
 
 @app.errorhandler(500)
@@ -487,7 +645,7 @@ def internal_server_error(error):
 
 
 # ============================================================
-# GLOBAL TEMPLATE VARIABLES
+# TEMPLATE GLOBALS
 # ============================================================
 
 @app.context_processor
@@ -495,15 +653,13 @@ def inject_globals():
 
     return {
         "site_name": "M1000",
-        "site_tagline": (
-            "Movies. Series. Endless Entertainment."
-        ),
+        "site_tagline": "Movies. Series. Endless Entertainment.",
         "current_year": 2026,
     }
 
 
 # ============================================================
-# START SERVER
+# APPLICATION START
 # ============================================================
 
 if __name__ == "__main__":
@@ -518,16 +674,9 @@ if __name__ == "__main__":
     print("=" * 60)
     print()
 
-    port = int(
-        os.environ.get(
-            "PORT",
-            5000,
-        )
-    )
-
     app.run(
         host="0.0.0.0",
-        port=port,
-        debug=False,
+        port=5000,
+        debug=True,
     )
 ```

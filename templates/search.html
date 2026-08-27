@@ -1,0 +1,610 @@
+{# =========================================================
+   M1000 — SEARCH RESULTS PAGE
+   File: templates/search.html
+
+   Premium Black + Gold / Yellow Theme
+   Responsive Netflix-style layout
+========================================================= #}
+
+{% extends "base.html" %}
+
+
+{% block title %}
+    {% if query %}
+        Search: {{ query }} — M1000
+    {% else %}
+        Search — M1000
+    {% endif %}
+{% endblock %}
+
+
+{% block content %}
+
+<main class="search-page">
+
+    <div class="page-container">
+
+
+        {# =====================================================
+           SEARCH HEADER
+        ====================================================== #}
+
+        <div class="search-page-header">
+
+            <h1 class="search-heading">
+                Search Results
+            </h1>
+
+
+            {% if query %}
+
+            <p class="search-query">
+                Results for
+                <strong>"{{ query }}"</strong>
+            </p>
+
+            {% else %}
+
+            <p class="search-query">
+                Search movies and web series
+            </p>
+
+            {% endif %}
+
+        </div>
+
+
+        {# =====================================================
+           SEARCH BOX
+        ====================================================== #}
+
+        <form
+            action="{{ url_for('search') }}"
+            method="GET"
+            class="search-page-form"
+        >
+
+            <div class="search-page-input-wrap">
+
+                <svg
+                    class="search-page-icon"
+                    viewBox="0 0 24 24"
+                    width="20"
+                    height="20"
+                    aria-hidden="true"
+                >
+                    <circle
+                        cx="11"
+                        cy="11"
+                        r="7"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-width="2"
+                    ></circle>
+
+                    <path
+                        d="M16.5 16.5L21 21"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-width="2"
+                        stroke-linecap="round"
+                    ></path>
+
+                </svg>
+
+
+                <input
+                    type="search"
+                    name="q"
+                    value="{{ query or '' }}"
+                    placeholder="Search movies & web series..."
+                    autocomplete="off"
+                    aria-label="Search movies and web series"
+                    autofocus
+                >
+
+
+                {% if query %}
+
+                <button
+                    type="button"
+                    class="search-clear"
+                    onclick="window.location.href='{{ url_for('search') }}'"
+                    aria-label="Clear search"
+                >
+                    ×
+                </button>
+
+                {% endif %}
+
+            </div>
+
+
+            <button
+                type="submit"
+                class="btn btn-primary search-submit"
+            >
+                Search
+            </button>
+
+        </form>
+
+
+        {# =====================================================
+           TOP AD
+        ====================================================== #}
+
+        <div class="ad-container site-top-ad desktop-ad">
+
+            <span class="ad-label">
+                Advertisement
+            </span>
+
+            {# Paste your Adsterra desktop ad code here #}
+
+        </div>
+
+
+        <div class="ad-container mobile-ad">
+
+            <span class="ad-label">
+                Advertisement
+            </span>
+
+            {# Paste your Adsterra mobile ad code here #}
+
+        </div>
+
+
+        {# =====================================================
+           RESULTS
+        ====================================================== #}
+
+        {% if movies %}
+
+
+        <section class="search-results-section">
+
+
+            <div class="section-header">
+
+                <h2 class="section-title">
+                    {% if query %}
+                        Results
+                    {% else %}
+                        Movies & Web Series
+                    {% endif %}
+                </h2>
+
+
+                <span class="section-link">
+                    {{ movies|length }} found
+                </span>
+
+            </div>
+
+
+            <div class="movie-grid">
+
+
+                {% for movie in movies %}
+
+                <article class="movie-card">
+
+
+                    {# =========================================
+                       POSTER LINK
+                    ========================================== #}
+
+                    <a
+                        href="{{ url_for('movie', movie_id=movie.id) }}"
+                        aria-label="View {{ movie.title }}"
+                    >
+
+
+                        <div class="movie-poster">
+
+
+                            {# Badge #}
+
+                            {% if movie.badge %}
+
+                            <span class="movie-badge">
+                                {{ movie.badge }}
+                            </span>
+
+                            {% endif %}
+
+
+                            {# Quality #}
+
+                            {% if movie.quality %}
+
+                            <span class="quality-badge">
+                                {{ movie.quality }}
+                            </span>
+
+                            {% endif %}
+
+
+                            {# Poster #}
+
+                            <img
+                                src="{{ movie.poster }}"
+                                alt="{{ movie.title }}"
+                                loading="lazy"
+                                onerror="
+                                    this.style.display='none';
+                                    this.parentElement.classList.add('image-error');
+                                "
+                            >
+
+
+                            {# Hover Play #}
+
+                            <div class="poster-overlay">
+
+                                <span
+                                    class="poster-play"
+                                    aria-hidden="true"
+                                >
+                                    ▶
+                                </span>
+
+                            </div>
+
+
+                        </div>
+
+
+                        {# =====================================
+                           MOVIE INFO
+                        ====================================== #}
+
+                        <div class="movie-info">
+
+
+                            <h3 class="movie-title">
+                                {{ movie.title }}
+                            </h3>
+
+
+                            <div class="movie-meta">
+
+
+                                {% if movie.year %}
+
+                                <span>
+                                    {{ movie.year }}
+                                </span>
+
+                                {% endif %}
+
+
+                                {% if movie.rating %}
+
+                                <span>
+                                    • ⭐ {{ movie.rating }}
+                                </span>
+
+                                {% endif %}
+
+
+                                {% if movie.language %}
+
+                                <span class="movie-category">
+                                    • {{ movie.language }}
+                                </span>
+
+                                {% endif %}
+
+
+                            </div>
+
+
+                            {# Small Download Button #}
+
+                            {% if movie.downloads %}
+
+                            <div class="movie-card-download">
+
+                                <span class="btn btn-download">
+                                    ⬇ Download
+                                </span>
+
+                            </div>
+
+                            {% endif %}
+
+
+                        </div>
+
+
+                    </a>
+
+
+                </article>
+
+                {% endfor %}
+
+
+            </div>
+
+
+        </section>
+
+
+        {# =====================================================
+           AD AFTER RESULTS
+        ====================================================== #}
+
+        <div class="ad-container desktop-ad">
+
+            <span class="ad-label">
+                Advertisement
+            </span>
+
+            {# Paste your Adsterra desktop ad code here #}
+
+        </div>
+
+
+        <div class="ad-container mobile-ad">
+
+            <span class="ad-label">
+                Advertisement
+            </span>
+
+            {# Paste your Adsterra mobile ad code here #}
+
+        </div %}
+
+
+        {% else %}
+
+
+        {# =====================================================
+           NO RESULTS
+        ====================================================== #}
+
+        <section class="empty-state search-empty">
+
+
+            <div
+                class="empty-icon"
+                aria-hidden="true"
+            >
+                🔍
+            </div>
+
+
+            {% if query %}
+
+            <h2>
+                No results found
+            </h2>
+
+            <p>
+                We couldn't find anything matching
+                <strong>"{{ query }}"</strong>.
+            </p>
+
+
+            {% else %}
+
+            <h2>
+                What are you looking for?
+            </h2>
+
+            <p>
+                Search for a movie or web series above.
+            </p>
+
+            {% endif %}
+
+
+            <a
+                href="{{ url_for('home') }}"
+                class="btn btn-primary"
+            >
+                ← Back to Home
+            </a>
+
+
+        </section>
+
+
+        {% endif %}
+
+
+    </div>
+
+</main>
+
+
+{# =========================================================
+   SMALL SEARCH PAGE ENHANCEMENTS
+========================================================= #}
+
+<style>
+
+.search-page-header {
+    margin-bottom: 22px;
+}
+
+.search-page-form {
+    width: 100%;
+
+    display: flex;
+    align-items: stretch;
+
+    gap: 9px;
+
+    margin-bottom: 25px;
+}
+
+.search-page-input-wrap {
+    position: relative;
+
+    flex: 1;
+
+    min-width: 0;
+
+    display: flex;
+    align-items: center;
+
+    background:
+        #121212;
+
+    border:
+        1px solid rgba(255,255,255,.1);
+
+    border-radius: 8px;
+
+    transition:
+        border-color .2s ease,
+        box-shadow .2s ease,
+        background .2s ease;
+}
+
+.search-page-input-wrap:focus-within {
+    background:
+        #161616;
+
+    border-color:
+        rgba(255,212,0,.45);
+
+    box-shadow:
+        0 0 0 3px rgba(255,212,0,.06),
+        0 0 20px rgba(255,212,0,.08);
+}
+
+.search-page-icon {
+    flex-shrink: 0;
+
+    margin-left: 14px;
+
+    color: #666;
+}
+
+.search-page-input-wrap:focus-within
+.search-page-icon {
+    color: var(--gold);
+}
+
+.search-page-input-wrap input {
+    width: 100%;
+    min-width: 0;
+
+    height: 48px;
+
+    padding:
+        0 45px 0 12px;
+
+    border: 0;
+    outline: 0;
+
+    background: transparent;
+
+    color: white;
+
+    font-size: 13px;
+}
+
+.search-page-input-wrap input::placeholder {
+    color: #555;
+}
+
+.search-clear {
+    position: absolute;
+
+    right: 9px;
+
+    width: 30px;
+    height: 30px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border: 0;
+
+    border-radius: 50%;
+
+    background: transparent;
+
+    color: #777;
+
+    font-size: 21px;
+
+    line-height: 1;
+}
+
+.search-clear:hover {
+    background:
+        rgba(255,255,255,.07);
+
+    color: var(--gold);
+}
+
+.search-submit {
+    min-width: 105px;
+
+    min-height: 48px;
+}
+
+.search-results-section {
+    margin-top: 15px;
+}
+
+.search-empty {
+    margin-top: 30px;
+}
+
+.search-empty strong {
+    color: var(--gold);
+}
+
+
+/* =====================================================
+   RESPONSIVE SEARCH
+===================================================== */
+
+@media (max-width: 520px) {
+
+    .search-page-form {
+        gap: 7px;
+    }
+
+    .search-page-input-wrap input {
+        height: 44px;
+
+        font-size: 12px;
+    }
+
+    .search-submit {
+        min-width: 75px;
+
+        min-height: 44px;
+
+        padding:
+            0 12px;
+
+        font-size: 10px;
+    }
+
+    .search-page-header {
+        margin-bottom: 17px;
+    }
+
+    .search-empty {
+        padding:
+            55px 15px;
+    }
+
+}
+
+</style>
+
+
+{% endblock %}

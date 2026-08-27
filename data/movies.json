@@ -1,0 +1,228 @@
+[
+  {
+    "id": "movie-001",
+    "title": "Example Movie",
+    "original_title": "Example Movie",
+    "year": 2026,
+    "type": "movie",
+
+    "category": "Tamil HD Movies",
+    "language": "Tamil",
+    "genre": [
+      "Action",
+      "Thriller"
+    ],
+
+    "rating": "8.2",
+    "duration": "2h 18m",
+    "certificate": "UA",
+
+    "poster": "https://graph.org/file/12456c4ee739c90e7e9d9-16c3d02845fdae8229.jpg",
+
+    "backdrop": "https://graph.org/file/12456c4ee739c90e7e9d9-16c3d02845fdae8229.jpg",
+
+    "description": "A gripping thriller filled with action, mystery and unexpected twists.",
+
+    "featured": true,
+    "trending": true,
+    "latest": true,
+
+    "screenshots": [
+      "https://graph.org/file/12456c4ee739c90e7e9d9-16c3d02845fdae8229.jpg",
+      "https://graph.org/file/12456c4ee739c90e7e9d9-16c3d02845fdae8229.jpg",
+      "https://graph.org/file/12456c4ee739c90e7e9d9-16c3d02845fdae8229.jpg"
+    ],
+
+    "downloads": [
+      {
+        "quality": "480p",
+        "size": "450 MB",
+        "url": "#"
+      },
+      {
+        "quality": "720p",
+        "size": "850 MB",
+        "url": "#"
+      },
+      {
+        "quality": "1080p",
+        "size": "1.8 GB",
+        "url": "#"
+      }
+    ]
+  },
+
+  {
+    "id": "movie-002",
+    "title": "Another Example",
+    "original_title": "Another Example",
+    "year": 2026,
+    "type": "movie",
+
+    "category": "Tamil New Movies",
+    "language": "Tamil",
+    "genre": [
+      "Drama",
+      "Romance"
+    ],
+
+    "rating": "7.8",
+    "duration": "2h 05m",
+    "certificate": "U",
+
+    "poster": "https://graph.org/file/12456c4ee739c90e7e9d9-16c3d02845fdae8229.jpg",
+
+    "backdrop": "https://graph.org/file/12456c4ee739c90e7e9d9-16c3d02845fdae8229.jpg",
+
+    "description": "A dramatic story about love, family and difficult choices.",
+
+    "featured": false,
+    "trending": true,
+    "latest": true,
+
+    "screenshots": [
+      "https://graph.org/file/12456c4ee739c90e7e9d9-16c3d02845fdae8229.jpg"
+    ],
+
+    "downloads": [
+      {
+        "quality": "480p",
+        "size": "400 MB",
+        "url": "#"
+      },
+      {
+        "quality": "720p",
+        "size": "800 MB",
+        "url": "#"
+      }
+    ]
+  },
+
+  {
+    "id": "movie-003",
+    "title": "Dubbed Example",
+    "original_title": "Dubbed Example",
+    "year": 2026,
+    "type": "movie",
+
+    "category": "Tamil Dubbed Movies",
+    "language": "Tamil Dubbed",
+    "genre": [
+      "Action",
+      "Adventure"
+    ],
+
+    "rating": "8.0",
+    "duration": "2h 12m",
+    "certificate": "UA",
+
+    "poster": "https://graph.org/file/12456c4ee739c90e7e9d9-16c3d02845fdae8229.jpg",
+
+    "backdrop": "https://graph.org/file/12456c4ee739c90e7e9d9-16c3d02845fdae8229.jpg",
+
+    "description": "An action-packed adventure with a dangerous mission and powerful enemies.",
+
+    "featured": false,
+    "trending": true,
+    "latest": false,
+
+    "screenshots": [
+      "https://graph.org/file/12456c4ee739c90e7e9d9-16c3d02845fdae8229.jpg"
+    ],
+
+    "downloads": [
+      {
+        "quality": "480p",
+        "size": "500 MB",
+        "url": "#"
+      },
+      {
+        "quality": "720p",
+        "size": "950 MB",
+        "url": "#"
+      },
+      {
+        "quality": "1080p",
+        "size": "2.1 GB",
+        "url": "#"
+      }
+    ]
+  },
+
+  {
+    "id": "series-001",
+    "title": "Example Web Series",
+    "original_title": "Example Web Series",
+    "year": 2026,
+    "type": "series",
+
+    "category": "Web Series",
+    "language": "Tamil",
+    "genre": [
+      "Crime",
+      "Mystery",
+      "Thriller"
+    ],
+
+    "rating": "8.6",
+    "duration": "45 min / episode",
+    "certificate": "A",
+
+    "poster": "https://graph.org/file/12456c4ee739c90e7e9d9-16c3d02845fdae8229.jpg",
+
+    "backdrop": "https://graph.org/file/12456c4ee739c90e7e9d9-16c3d02845fdae8229.jpg",
+
+    "description": "A dark mystery series where every episode reveals another secret.",
+
+    "featured": false,
+    "trending": true,
+    "latest": true,
+
+    "screenshots": [
+      "https://graph.org/file/12456c4ee739c90e7e9d9-16c3d02845fdae8229.jpg",
+      "https://graph.org/file/12456c4ee739c90e7e9d9-16c3d02845fdae8229.jpg"
+    ],
+
+    "seasons": [
+      {
+        "season": 1,
+        "episodes": [
+          {
+            "episode": 1,
+            "title": "The Beginning",
+            "duration": "42 min",
+            "downloads": [
+              {
+                "quality": "480p",
+                "size": "300 MB",
+                "url": "#"
+              },
+              {
+                "quality": "720p",
+                "size": "600 MB",
+                "url": "#"
+              }
+            ]
+          },
+          {
+            "episode": 2,
+            "title": "The Secret",
+            "duration": "44 min",
+            "downloads": [
+              {
+                "quality": "480p",
+                "size": "320 MB",
+                "url": "#"
+              },
+              {
+                "quality": "720p",
+                "size": "650 MB",
+                "url": "#"
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  }
+]

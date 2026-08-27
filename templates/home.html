@@ -1,36 +1,239 @@
 {# =========================================================
-   M1000 — PREMIUM STREAMING HOME
-   File: templates/home.html
+M1000 — PREMIUM STREAMING HOME
+File: templates/home.html
 
-   Compatible with current app.py
+Adsterra:
+300x250 Banner inserted in:
 
-   Flask variables:
-   - movies
-   - featured
-   - newest_movies
-   - popular_movies
-   - categories
+1. Top of page
+2. After hero
+3. Middle of page
+4. Bottom of page
+
+IMPORTANT:
+Keep the Adsterra script exactly as provided.
 ========================================================= #}
 
 {% extends "base.html" %}
 
-
 {% block title %}
-    M1000 — Watch & Discover Movies
+M1000 — Watch & Discover Movies
 {% endblock %}
-
 
 {% block content %}
 
 <main class="home-page">
 
+```
+{# =====================================================
+   TOP 300x250 AD
+   ADSTERRA CODE START
+====================================================== #}
 
-    {# =====================================================
-       TOP AD
-    ====================================================== #}
+<section
+    class="ad-container site-top-ad"
+    aria-label="Advertisement"
+>
+
+    <span class="ad-label">
+        Advertisement
+    </span>
+
+    <div class="ad-content">
+
+        <!-- ===== ADSTERRA 300x250 START ===== -->
+
+        <script>
+          atOptions = {
+            'key' : '92635afe7ff3a68469d4dc59cbd6b0b6',
+            'format' : 'iframe',
+            'height' : 250,
+            'width' : 300,
+            'params' : {}
+          };
+        </script>
+
+        <script
+            src="https://www.highrevenueformat.com/92635afe7ff3a68469d4dc59cbd6b0b6/invoke.js">
+        </script>
+
+        <!-- ===== ADSTERRA 300x250 END ===== -->
+
+    </div>
+
+</section>
+
+
+{# =====================================================
+   HERO
+====================================================== #}
+
+{% set hero =
+    featured_movie
+    if featured_movie is defined and featured_movie
+    else (movies[0] if movies else none)
+%}
+
+
+{% if hero %}
+
+<section class="hero">
+
+    {% if hero.backdrop %}
+
+    <img
+        src="{{ hero.backdrop }}"
+        alt=""
+        class="hero-image"
+        loading="eager"
+        fetchpriority="high"
+    >
+
+    {% elif hero.poster %}
+
+    <img
+        src="{{ hero.poster }}"
+        alt=""
+        class="hero-image"
+        loading="eager"
+        fetchpriority="high"
+    >
+
+    {% endif %}
+
+
+    <div class="hero-content">
+
+        <span class="hero-badge">
+            FEATURED
+        </span>
+
+
+        <h1 class="hero-title">
+            {{ hero.title | default('M1000 Originals') }}
+        </h1>
+
+
+        <div class="hero-meta">
+
+            {% if hero.year %}
+            <span>{{ hero.year }}</span>
+            {% endif %}
+
+
+            {% if hero.rating %}
+            <span>•</span>
+            <span>⭐ {{ hero.rating }}</span>
+            {% endif %}
+
+
+            {% if hero.quality %}
+            <span>•</span>
+            <span>{{ hero.quality }}</span>
+            {% endif %}
+
+
+            {% if hero.language %}
+            <span>•</span>
+            <span>{{ hero.language }}</span>
+            {% endif %}
+
+        </div>
+
+
+        {% if hero.description %}
+
+        <p class="hero-description">
+            {{ hero.description }}
+        </p>
+
+        {% else %}
+
+        <p class="hero-description">
+            Discover movies and series in a premium cinematic
+            experience built for M1000.
+        </p>
+
+        {% endif %}
+
+
+        <div class="hero-buttons">
+
+            {% if hero.id %}
+
+            <a
+                href="{{ url_for('movie_detail', movie_id=hero.id) }}"
+                class="btn btn-primary"
+            >
+                <span aria-hidden="true">▶</span>
+                View Details
+            </a>
+
+            {% endif %}
+
+
+            <a
+                href="#latest"
+                class="btn btn-secondary"
+            >
+                <span aria-hidden="true">＋</span>
+                Browse Movies
+            </a>
+
+        </div>
+
+    </div>
+
+</section>
+
+{% else %}
+
+<section class="hero">
+
+    <div class="hero-content">
+
+        <span class="hero-badge">
+            M1000
+        </span>
+
+        <h1 class="hero-title">
+            Your Cinema.
+        </h1>
+
+        <p class="hero-description">
+            Discover your next movie and explore the M1000
+            collection.
+        </p>
+
+        <div class="hero-buttons">
+
+            <a
+                href="#latest"
+                class="btn btn-primary"
+            >
+                Explore Now
+            </a>
+
+        </div>
+
+    </div>
+
+</section>
+
+{% endif %}
+
+
+
+<div class="page-container">
+
+
+    {# =================================================
+       AD AFTER HERO
+       ADSTERRA 300x250
+    ================================================== #}
 
     <section
-        class="ad-container site-top-ad"
+        class="ad-container"
         aria-label="Advertisement"
     >
 
@@ -40,24 +243,23 @@
 
         <div class="ad-content">
 
-            {#
-            ==================================================
-            ADSTERRA — TOP AD
+            <!-- ===== ADSTERRA 300x250 START ===== -->
 
-            Paste your authorized Adsterra code HERE.
-
-            Recommended:
-            - Native Banner
-            - 320x50 Banner
-
-            Example:
-
-            <script type="text/javascript">
-                YOUR_ADSTERRA_CODE
+            <script>
+              atOptions = {
+                'key' : '92635afe7ff3a68469d4dc59cbd6b0b6',
+                'format' : 'iframe',
+                'height' : 250,
+                'width' : 300,
+                'params' : {}
+              };
             </script>
 
-            ==================================================
-            #}
+            <script
+                src="https://www.highrevenueformat.com/92635afe7ff3a68469d4dc59cbd6b0b6/invoke.js">
+            </script>
+
+            <!-- ===== ADSTERRA 300x250 END ===== -->
 
         </div>
 
@@ -65,1304 +267,796 @@
 
 
 
-    {# =====================================================
-       HERO
-    ====================================================== #}
+    {# =================================================
+       LATEST MOVIES
+    ================================================== #}
 
-    {% set hero = featured if featured else (movies[0] if movies else none) %}
+    <section
+        class="section"
+        id="latest"
+    >
+
+        <div class="section-header">
+
+            <h2 class="section-title">
+                Latest Movies
+            </h2>
+
+            <a
+                href="{{ url_for(
+                    'category',
+                    category_name='Tamil New Movies'
+                ) }}"
+                class="section-link"
+            >
+                View All →
+            </a>
+
+        </div>
 
 
-    {% if hero %}
+        {% if movies %}
 
-    <section class="hero">
+        <div class="movie-grid">
+
+            {% for movie in movies %}
+
+            <article class="movie-card">
+
+                <div class="movie-poster">
+
+                    {% if movie.badge %}
+
+                    <span class="movie-badge">
+                        {{ movie.badge }}
+                    </span>
+
+                    {% endif %}
 
 
-        {% if hero.backdrop %}
+                    {% if movie.quality %}
 
-        <img
-            src="{{ hero.backdrop }}"
-            alt=""
-            class="hero-image"
-            loading="eager"
-            fetchpriority="high"
-        >
+                    <span class="quality-badge">
+                        {{ movie.quality }}
+                    </span>
 
-        {% elif hero.poster %}
+                    {% endif %}
 
-        <img
-            src="{{ hero.poster }}"
-            alt=""
-            class="hero-image"
-            loading="eager"
-            fetchpriority="high"
-        >
+
+                    {% if movie.poster %}
+
+                    <img
+                        src="{{ movie.poster }}"
+                        alt="{{ movie.title | default('Movie') }} poster"
+                        loading="lazy"
+                        decoding="async"
+                    >
+
+                    {% endif %}
+
+
+                    <div class="poster-overlay">
+
+                        {% if movie.id %}
+
+                        <a
+                            href="{{ url_for(
+                                'movie_detail',
+                                movie_id=movie.id
+                            ) }}"
+                            class="poster-play"
+                            aria-label="View {{ movie.title }}"
+                        >
+                            ▶
+                        </a>
+
+                        {% endif %}
+
+                    </div>
+
+                </div>
+
+
+                <div class="movie-info">
+
+                    <a
+                        href="{{ url_for(
+                            'movie_detail',
+                            movie_id=movie.id
+                        ) }}"
+                        class="movie-title"
+                    >
+                        {{ movie.title | default('Untitled') }}
+                    </a>
+
+
+                    <div class="movie-meta">
+
+                        {% if movie.year %}
+                        <span>{{ movie.year }}</span>
+                        {% endif %}
+
+
+                        {% if movie.year and movie.language %}
+                        <span>•</span>
+                        {% endif %}
+
+
+                        {% if movie.language %}
+                        <span class="movie-category">
+                            {{ movie.language }}
+                        </span>
+                        {% endif %}
+
+                    </div>
+
+
+                    <div class="movie-card-download">
+
+                        <a
+                            href="{{ url_for(
+                                'movie_detail',
+                                movie_id=movie.id
+                            ) }}"
+                            class="btn btn-download"
+                        >
+                            View Movie
+                        </a>
+
+                    </div>
+
+                </div>
+
+            </article>
+
+            {% endfor %}
+
+        </div>
+
+
+        {% else %}
+
+        <div class="empty-state">
+
+            <div class="empty-icon">
+                🎬
+            </div>
+
+            <h2>
+                No Movies Available
+            </h2>
+
+            <p>
+                Movies will appear here when they are added.
+            </p>
+
+        </div>
 
         {% endif %}
 
-
-        <div class="hero-content">
-
-
-            <span class="hero-badge">
-                FEATURED
-            </span>
-
-
-            <h1 class="hero-title">
-                {{ hero.title | default('M1000 Originals') }}
-            </h1>
-
-
-            <div class="hero-meta">
-
-
-                {% if hero.year %}
-
-                <span>
-                    {{ hero.year }}
-                </span>
-
-                {% endif %}
-
-
-                {% if hero.rating %}
-
-                <span>•</span>
-
-                <span>
-                    ⭐ {{ hero.rating }}
-                </span>
-
-                {% endif %}
-
-
-                {% if hero.duration %}
-
-                <span>•</span>
-
-                <span>
-                    {{ hero.duration }}
-                </span>
-
-                {% endif %}
-
-
-                {% if hero.language %}
-
-                <span>•</span>
-
-                <span>
-                    {{ hero.language }}
-                </span>
-
-                {% endif %}
-
-
-            </div>
-
-
-            {% if hero.description %}
-
-            <p class="hero-description">
-                {{ hero.description }}
-            </p>
-
-            {% else %}
-
-            <p class="hero-description">
-                Discover movies and series in a premium cinematic
-                experience built for M1000.
-            </p>
-
-            {% endif %}
-
-
-            <div class="hero-buttons">
-
-
-                {% if hero.id %}
-
-                <a
-                    href="{{ url_for('movie_detail', movie_id=hero.id) }}"
-                    class="btn btn-primary"
-                >
-                    <span aria-hidden="true">▶</span>
-                    View Details
-                </a>
-
-                {% endif %}
-
-
-                <a
-                    href="#latest"
-                    class="btn btn-secondary"
-                >
-                    <span aria-hidden="true">＋</span>
-                    Browse Movies
-                </a>
-
-
-            </div>
-
-
-        </div>
-
-
     </section>
 
 
-    {% else %}
 
+    {# =================================================
+       MIDDLE AD
+       ADSTERRA 300x250
+    ================================================== #}
 
-    {# =====================================================
-       EMPTY HERO
-    ====================================================== #}
+    <section
+        class="ad-container"
+        aria-label="Advertisement"
+    >
 
-    <section class="hero empty-hero">
+        <span class="ad-label">
+            Advertisement
+        </span>
 
-        <div class="hero-content">
+        <div class="ad-content">
 
-            <span class="hero-badge">
-                M1000
-            </span>
+            <!-- ===== ADSTERRA 300x250 START ===== -->
 
+            <script>
+              atOptions = {
+                'key' : '92635afe7ff3a68469d4dc59cbd6b0b6',
+                'format' : 'iframe',
+                'height' : 250,
+                'width' : 300,
+                'params' : {}
+              };
+            </script>
 
-            <h1 class="hero-title">
-                Your Cinema.
-            </h1>
+            <script
+                src="https://www.highrevenueformat.com/92635afe7ff3a68469d4dc59cbd6b0b6/invoke.js">
+            </script>
 
-
-            <p class="hero-description">
-                Discover your next movie and explore the M1000
-                collection.
-            </p>
-
-
-            <div class="hero-buttons">
-
-                <a
-                    href="#latest"
-                    class="btn btn-primary"
-                >
-                    Explore Now
-                </a>
-
-            </div>
+            <!-- ===== ADSTERRA 300x250 END ===== -->
 
         </div>
 
     </section>
 
+
+
+    {# =================================================
+       TAMIL HD MOVIES
+    ================================================== #}
+
+    {% set tamil_hd = movies
+        | selectattr('category', 'equalto', 'Tamil HD Movies')
+        | list
+    %}
+
+
+    {% if tamil_hd %}
+
+    <section class="section">
+
+        <div class="section-header">
+
+            <h2 class="section-title">
+                Tamil HD Movies
+            </h2>
+
+            <a
+                href="{{ url_for(
+                    'category',
+                    category_name='Tamil HD Movies'
+                ) }}"
+                class="section-link"
+            >
+                View All →
+            </a>
+
+        </div>
+
+
+        <div class="movie-grid">
+
+            {% for movie in tamil_hd[:6] %}
+
+            <article class="movie-card">
+
+                <div class="movie-poster">
+
+                    {% if movie.quality %}
+                    <span class="quality-badge">
+                        {{ movie.quality }}
+                    </span>
+                    {% endif %}
+
+
+                    {% if movie.poster %}
+
+                    <img
+                        src="{{ movie.poster }}"
+                        alt="{{ movie.title }} poster"
+                        loading="lazy"
+                        decoding="async"
+                    >
+
+                    {% endif %}
+
+
+                    <div class="poster-overlay">
+
+                        <a
+                            href="{{ url_for(
+                                'movie_detail',
+                                movie_id=movie.id
+                            ) }}"
+                            class="poster-play"
+                        >
+                            ▶
+                        </a>
+
+                    </div>
+
+                </div>
+
+
+                <div class="movie-info">
+
+                    <a
+                        href="{{ url_for(
+                            'movie_detail',
+                            movie_id=movie.id
+                        ) }}"
+                        class="movie-title"
+                    >
+                        {{ movie.title }}
+                    </a>
+
+
+                    <div class="movie-meta">
+
+                        {% if movie.year %}
+                        <span>{{ movie.year }}</span>
+                        {% endif %}
+
+                        {% if movie.language %}
+                        <span>•</span>
+                        <span class="movie-category">
+                            {{ movie.language }}
+                        </span>
+                        {% endif %}
+
+                    </div>
+
+
+                    <div class="movie-card-download">
+
+                        <a
+                            href="{{ url_for(
+                                'movie_detail',
+                                movie_id=movie.id
+                            ) }}"
+                            class="btn btn-download"
+                        >
+                            View Movie
+                        </a>
+
+                    </div>
+
+                </div>
+
+            </article>
+
+            {% endfor %}
+
+        </div>
+
+    </section>
 
     {% endif %}
 
 
 
-    {# =====================================================
-       MAIN CONTAINER
-    ====================================================== #}
+    {# =================================================
+       NEW RELEASES
+    ================================================== #}
 
-    <div class="page-container">
+    {% set new_movies = movies
+        | selectattr('category', 'equalto', 'Tamil New Movies')
+        | list
+    %}
 
 
+    {% if new_movies %}
 
-        {# =================================================
-           AFTER HERO AD
-        ================================================== #}
+    <section class="section">
 
-        <section
-            class="ad-container"
-            aria-label="Advertisement"
-        >
+        <div class="section-header">
 
-            <span class="ad-label">
-                Advertisement
-            </span>
+            <h2 class="section-title">
+                New Releases
+            </h2>
 
+            <a
+                href="{{ url_for(
+                    'category',
+                    category_name='Tamil New Movies'
+                ) }}"
+                class="section-link"
+            >
+                View All →
+            </a>
 
-            <div class="ad-content">
+        </div>
 
-                {#
-                ==================================================
-                ADSTERRA — AFTER HERO
 
-                Good place for:
+        <div class="movie-grid">
 
-                • Native Banner
-                • Banner 300x250
+            {% for movie in new_movies[:6] %}
 
-                Paste authorized Adsterra code HERE.
-                ==================================================
-                #}
+            <article class="movie-card">
 
-            </div>
+                <div class="movie-poster">
 
-        </section>
+                    <span class="movie-badge">
+                        NEW
+                    </span>
 
 
+                    {% if movie.quality %}
+                    <span class="quality-badge">
+                        {{ movie.quality }}
+                    </span>
+                    {% endif %}
 
-        {# =================================================
-           LATEST MOVIES
-        ================================================== #}
 
-        <section
-            class="section"
-            id="latest"
-        >
+                    {% if movie.poster %}
 
+                    <img
+                        src="{{ movie.poster }}"
+                        alt="{{ movie.title }} poster"
+                        loading="lazy"
+                        decoding="async"
+                    >
 
-            <div class="section-header">
+                    {% endif %}
 
-                <h2 class="section-title">
-                    Latest Movies
-                </h2>
 
-
-                <a
-                    href="{{ url_for(
-                        'category',
-                        category_name='Tamil New Movies'
-                    ) }}"
-                    class="section-link"
-                >
-                    View All →
-                </a>
-
-            </div>
-
-
-
-            {% if newest_movies %}
-
-
-            <div class="movie-grid">
-
-
-                {% for movie in newest_movies %}
-
-
-                <article class="movie-card">
-
-
-                    <div class="movie-poster">
-
-
-                        {% if movie.badge %}
-
-                        <span class="movie-badge">
-                            {{ movie.badge }}
-                        </span>
-
-                        {% endif %}
-
-
-                        {% if movie.type == 'series' %}
-
-                        <span class="movie-badge">
-                            SERIES
-                        </span>
-
-                        {% endif %}
-
-
-                        {% if movie.quality %}
-
-                        <span class="quality-badge">
-                            {{ movie.quality }}
-                        </span>
-
-                        {% endif %}
-
-
-                        {% if movie.poster %}
-
-                        <img
-                            src="{{ movie.poster }}"
-                            alt="{{ movie.title | default('Movie') }} poster"
-                            loading="lazy"
-                            decoding="async"
-                        >
-
-                        {% else %}
-
-                        <div
-                            class="image-error"
-                            aria-label="Image unavailable"
-                        ></div>
-
-                        {% endif %}
-
-
-
-                        <div class="poster-overlay">
-
-
-                            {% if movie.id %}
-
-                            <a
-                                href="{{ url_for(
-                                    'movie_detail',
-                                    movie_id=movie.id
-                                ) }}"
-                                class="poster-play"
-                                aria-label="View {{ movie.title }}"
-                            >
-                                ▶
-                            </a>
-
-                            {% endif %}
-
-
-                        </div>
-
-
-                    </div>
-
-
-
-                    <div class="movie-info">
-
+                    <div class="poster-overlay">
 
                         <a
                             href="{{ url_for(
                                 'movie_detail',
                                 movie_id=movie.id
                             ) }}"
-                            class="movie-title"
+                            class="poster-play"
                         >
-                            {{ movie.title | default('Untitled') }}
+                            ▶
                         </a>
-
-
-
-                        <div class="movie-meta">
-
-
-                            {% if movie.year %}
-
-                            <span>
-                                {{ movie.year }}
-                            </span>
-
-                            {% endif %}
-
-
-                            {% if movie.year and movie.language %}
-
-                            <span>
-                                •
-                            </span>
-
-                            {% endif %}
-
-
-                            {% if movie.language %}
-
-                            <span class="movie-category">
-                                {{ movie.language }}
-                            </span>
-
-                            {% endif %}
-
-
-                        </div>
-
-
-
-                        <div class="movie-card-download">
-
-                            <a
-                                href="{{ url_for(
-                                    'movie_detail',
-                                    movie_id=movie.id
-                                ) }}"
-                                class="btn btn-download"
-                            >
-                                View Movie
-                            </a>
-
-                        </div>
-
 
                     </div>
 
-
-                </article>
-
-
-                {% endfor %}
-
-
-            </div>
-
-
-            {% else %}
-
-
-            <div class="empty-state">
-
-                <div class="empty-icon">
-                    🎬
                 </div>
 
-                <h2>
-                    No Movies Available
-                </h2>
 
-                <p>
-                    Movies will appear here when they are added.
-                </p>
+                <div class="movie-info">
 
-            </div>
-
-
-            {% endif %}
-
-
-        </section>
+                    <a
+                        href="{{ url_for(
+                            'movie_detail',
+                            movie_id=movie.id
+                        ) }}"
+                        class="movie-title"
+                    >
+                        {{ movie.title }}
+                    </a>
 
 
+                    <div class="movie-meta">
 
-        {# =================================================
-           MID AD
-        ================================================== #}
-
-        <section
-            class="ad-container"
-            aria-label="Advertisement"
-        >
-
-            <span class="ad-label">
-                Advertisement
-            </span>
-
-
-            <div class="ad-content">
-
-                {#
-                ==================================================
-                ADSTERRA — MID PAGE
-
-                Recommended:
-
-                • Banner 300x250
-
-                Paste authorized Adsterra code HERE.
-                ==================================================
-                #}
-
-            </div>
-
-        </section>
-
-
-
-        {# =================================================
-           POPULAR MOVIES
-        ================================================== #}
-
-        {% if popular_movies %}
-
-
-        <section class="section">
-
-
-            <div class="section-header">
-
-                <h2 class="section-title">
-                    Popular Movies
-                </h2>
-
-            </div>
-
-
-            <div class="movie-grid">
-
-
-                {% for movie in popular_movies[:12] %}
-
-
-                <article class="movie-card">
-
-
-                    <div class="movie-poster">
-
-
-                        {% if movie.poster %}
-
-                        <img
-                            src="{{ movie.poster }}"
-                            alt="{{ movie.title }} poster"
-                            loading="lazy"
-                            decoding="async"
-                        >
-
+                        {% if movie.year %}
+                        <span>{{ movie.year }}</span>
                         {% endif %}
 
-
-                        {% if movie.quality %}
-
-                        <span class="quality-badge">
-                            {{ movie.quality }}
+                        {% if movie.language %}
+                        <span>•</span>
+                        <span class="movie-category">
+                            {{ movie.language }}
                         </span>
-
                         {% endif %}
-
-
-                        <div class="poster-overlay">
-
-                            <a
-                                href="{{ url_for(
-                                    'movie_detail',
-                                    movie_id=movie.id
-                                ) }}"
-                                class="poster-play"
-                                aria-label="View {{ movie.title }}"
-                            >
-                                ▶
-                            </a>
-
-                        </div>
-
 
                     </div>
 
 
-                    <div class="movie-info">
-
+                    <div class="movie-card-download">
 
                         <a
                             href="{{ url_for(
                                 'movie_detail',
                                 movie_id=movie.id
                             ) }}"
-                            class="movie-title"
+                            class="btn btn-download"
                         >
-                            {{ movie.title }}
+                            View Movie
                         </a>
 
-
-                        <div class="movie-meta">
-
-                            {% if movie.year %}
-                            <span>{{ movie.year }}</span>
-                            {% endif %}
-
-                            {% if movie.language %}
-                            <span>•</span>
-                            <span class="movie-category">
-                                {{ movie.language }}
-                            </span>
-                            {% endif %}
-
-                        </div>
-
-
-                        <div class="movie-card-download">
-
-                            <a
-                                href="{{ url_for(
-                                    'movie_detail',
-                                    movie_id=movie.id
-                                ) }}"
-                                class="btn btn-download"
-                            >
-                                View Movie
-                            </a>
-
-                        </div>
-
-
                     </div>
 
+                </div>
 
-                </article>
+            </article>
 
+            {% endfor %}
 
-                {% endfor %}
+        </div>
 
+    </section>
 
-            </div>
-
-
-        </section>
-
-
-        {% endif %}
+    {% endif %}
 
 
 
-        {# =================================================
-           CATEGORY: TAMIL HD
-        ================================================== #}
+    {# =================================================
+       DUBBED MOVIES
+    ================================================== #}
 
-        {% set tamil_hd = movies
-            | selectattr('category', 'equalto', 'Tamil HD Movies')
-            | list
-        %}
-
-
-        {% if tamil_hd %}
+    {% set dubbed_movies = movies
+        | selectattr('category', 'equalto', 'Tamil Dubbed Movies')
+        | list
+    %}
 
 
-        <section class="section">
+    {% if dubbed_movies %}
+
+    <section class="section">
+
+        <div class="section-header">
+
+            <h2 class="section-title">
+                Tamil Dubbed
+            </h2>
+
+            <a
+                href="{{ url_for(
+                    'category',
+                    category_name='Tamil Dubbed Movies'
+                ) }}"
+                class="section-link"
+            >
+                View All →
+            </a>
+
+        </div>
 
 
-            <div class="section-header">
+        <div class="movie-grid">
 
-                <h2 class="section-title">
-                    Tamil HD Movies
-                </h2>
+            {% for movie in dubbed_movies[:6] %}
 
+            <article class="movie-card">
 
-                <a
-                    href="{{ url_for(
-                        'category',
-                        category_name='Tamil HD Movies'
-                    ) }}"
-                    class="section-link"
-                >
-                    View All →
-                </a>
+                <div class="movie-poster">
 
-            </div>
+                    {% if movie.quality %}
+                    <span class="quality-badge">
+                        {{ movie.quality }}
+                    </span>
+                    {% endif %}
 
 
-            <div class="movie-grid">
+                    {% if movie.poster %}
+
+                    <img
+                        src="{{ movie.poster }}"
+                        alt="{{ movie.title }} poster"
+                        loading="lazy"
+                        decoding="async"
+                    >
+
+                    {% endif %}
 
 
-                {% for movie in tamil_hd[:6] %}
-
-                <article class="movie-card">
-
-                    <div class="movie-poster">
-
-
-                        {% if movie.quality %}
-
-                        <span class="quality-badge">
-                            {{ movie.quality }}
-                        </span>
-
-                        {% endif %}
-
-
-                        <img
-                            src="{{ movie.poster }}"
-                            alt="{{ movie.title }} poster"
-                            loading="lazy"
-                            decoding="async"
-                        >
-
-
-                        <div class="poster-overlay">
-
-                            <a
-                                href="{{ url_for(
-                                    'movie_detail',
-                                    movie_id=movie.id
-                                ) }}"
-                                class="poster-play"
-                                aria-label="View {{ movie.title }}"
-                            >
-                                ▶
-                            </a>
-
-                        </div>
-
-
-                    </div>
-
-
-                    <div class="movie-info">
+                    <div class="poster-overlay">
 
                         <a
                             href="{{ url_for(
                                 'movie_detail',
                                 movie_id=movie.id
                             ) }}"
-                            class="movie-title"
+                            class="poster-play"
                         >
-                            {{ movie.title }}
+                            ▶
                         </a>
 
-
-                        <div class="movie-meta">
-
-                            <span>
-                                {{ movie.year }}
-                            </span>
-
-                            {% if movie.language %}
-
-                            <span>•</span>
-
-                            <span class="movie-category">
-                                {{ movie.language }}
-                            </span>
-
-                            {% endif %}
-
-                        </div>
-
-
-                        <div class="movie-card-download">
-
-                            <a
-                                href="{{ url_for(
-                                    'movie_detail',
-                                    movie_id=movie.id
-                                ) }}"
-                                class="btn btn-download"
-                            >
-                                View Movie
-                            </a>
-
-                        </div>
-
-
                     </div>
 
-                </article>
-
-                {% endfor %}
+                </div>
 
 
-            </div>
+                <div class="movie-info">
+
+                    <a
+                        href="{{ url_for(
+                            'movie_detail',
+                            movie_id=movie.id
+                        ) }}"
+                        class="movie-title"
+                    >
+                        {{ movie.title }}
+                    </a>
 
 
-        </section>
+                    <div class="movie-meta">
 
-
-        {% endif %}
-
-
-
-        {# =================================================
-           CATEGORY: NEW MOVIES
-           
-           Supports:
-           "Tamil New Movies"
-           AND
-           "New Movies"
-        ================================================== #}
-
-        {% set new_movies = [] %}
-
-
-        {% for movie in movies %}
-
-            {% if
-                movie.category == 'Tamil New Movies'
-                or movie.category == 'New Movies'
-            %}
-
-                {% set new_movies = new_movies + [movie] %}
-
-            {% endif %}
-
-        {% endfor %}
-
-
-        {% if new_movies %}
-
-
-        <section class="section">
-
-
-            <div class="section-header">
-
-                <h2 class="section-title">
-                    New Releases
-                </h2>
-
-
-                <a
-                    href="{{ url_for(
-                        'category',
-                        category_name='Tamil New Movies'
-                    ) }}"
-                    class="section-link"
-                >
-                    View All →
-                </a>
-
-            </div>
-
-
-            <div class="movie-grid">
-
-
-                {% for movie in new_movies[:6] %}
-
-
-                <article class="movie-card">
-
-
-                    <div class="movie-poster">
-
-
-                        <span class="movie-badge">
-                            NEW
-                        </span>
-
-
-                        {% if movie.quality %}
-
-                        <span class="quality-badge">
-                            {{ movie.quality }}
-                        </span>
-
+                        {% if movie.year %}
+                        <span>{{ movie.year }}</span>
                         {% endif %}
 
-
-                        {% if movie.poster %}
-
-                        <img
-                            src="{{ movie.poster }}"
-                            alt="{{ movie.title }} poster"
-                            loading="lazy"
-                            decoding="async"
-                        >
-
+                        {% if movie.language %}
+                        <span>•</span>
+                        <span class="movie-category">
+                            {{ movie.language }}
+                        </span>
                         {% endif %}
-
-
-                        <div class="poster-overlay">
-
-                            <a
-                                href="{{ url_for(
-                                    'movie_detail',
-                                    movie_id=movie.id
-                                ) }}"
-                                class="poster-play"
-                                aria-label="View {{ movie.title }}"
-                            >
-                                ▶
-                            </a>
-
-                        </div>
-
 
                     </div>
 
 
-                    <div class="movie-info">
-
+                    <div class="movie-card-download">
 
                         <a
                             href="{{ url_for(
                                 'movie_detail',
                                 movie_id=movie.id
                             ) }}"
-                            class="movie-title"
+                            class="btn btn-download"
                         >
-                            {{ movie.title }}
+                            View Movie
                         </a>
 
-
-                        <div class="movie-meta">
-
-                            {% if movie.year %}
-
-                            <span>
-                                {{ movie.year }}
-                            </span>
-
-                            {% endif %}
-
-
-                            {% if movie.language %}
-
-                            <span>
-                                •
-                            </span>
-
-                            <span class="movie-category">
-                                {{ movie.language }}
-                            </span>
-
-                            {% endif %}
-
-                        </div>
-
-
-                        <div class="movie-card-download">
-
-                            <a
-                                href="{{ url_for(
-                                    'movie_detail',
-                                    movie_id=movie.id
-                                ) }}"
-                                class="btn btn-download"
-                            >
-                                View Movie
-                            </a>
-
-                        </div>
-
-
                     </div>
 
+                </div>
 
-                </article>
+            </article>
 
+            {% endfor %}
 
-                {% endfor %}
+        </div>
 
+    </section>
 
-            </div>
-
-
-        </section>
-
-
-        {% endif %}
+    {% endif %}
 
 
 
-        {# =================================================
-           CATEGORY: DUBBED
-        ================================================== #}
+    {# =================================================
+       WEB SERIES
+    ================================================== #}
 
-        {% set dubbed_movies = movies
-            | selectattr('category', 'equalto', 'Tamil Dubbed Movies')
-            | list
-        %}
-
-
-        {% if dubbed_movies %}
+    {% set web_series = movies
+        | selectattr('category', 'equalto', 'Web Series')
+        | list
+    %}
 
 
-        <section class="section">
+    {% if web_series %}
+
+    <section class="section">
+
+        <div class="section-header">
+
+            <h2 class="section-title">
+                Web Series
+            </h2>
+
+            <a
+                href="{{ url_for(
+                    'category',
+                    category_name='Web Series'
+                ) }}"
+                class="section-link"
+            >
+                View All →
+            </a>
+
+        </div>
 
 
-            <div class="section-header">
+        <div class="movie-grid">
 
-                <h2 class="section-title">
-                    Tamil Dubbed
-                </h2>
+            {% for movie in web_series[:6] %}
 
+            <article class="movie-card">
 
-                <a
-                    href="{{ url_for(
-                        'category',
-                        category_name='Tamil Dubbed Movies'
-                    ) }}"
-                    class="section-link"
-                >
-                    View All →
-                </a>
+                <div class="movie-poster">
 
-            </div>
+                    <span class="movie-badge">
+                        SERIES
+                    </span>
 
 
-            <div class="movie-grid">
+                    {% if movie.poster %}
+
+                    <img
+                        src="{{ movie.poster }}"
+                        alt="{{ movie.title }} poster"
+                        loading="lazy"
+                        decoding="async"
+                    >
+
+                    {% endif %}
 
 
-                {% for movie in dubbed_movies[:6] %}
-
-
-                <article class="movie-card">
-
-
-                    <div class="movie-poster">
-
-
-                        {% if movie.poster %}
-
-                        <img
-                            src="{{ movie.poster }}"
-                            alt="{{ movie.title }} poster"
-                            loading="lazy"
-                            decoding="async"
-                        >
-
-                        {% endif %}
-
-
-                        {% if movie.quality %}
-
-                        <span class="quality-badge">
-                            {{ movie.quality }}
-                        </span>
-
-                        {% endif %}
-
-
-                        <div class="poster-overlay">
-
-                            <a
-                                href="{{ url_for(
-                                    'movie_detail',
-                                    movie_id=movie.id
-                                ) }}"
-                                class="poster-play"
-                                aria-label="View {{ movie.title }}"
-                            >
-                                ▶
-                            </a>
-
-                        </div>
-
-
-                    </div>
-
-
-                    <div class="movie-info">
-
+                    <div class="poster-overlay">
 
                         <a
                             href="{{ url_for(
                                 'movie_detail',
                                 movie_id=movie.id
                             ) }}"
-                            class="movie-title"
+                            class="poster-play"
                         >
-                            {{ movie.title }}
+                            ▶
                         </a>
 
-
-                        <div class="movie-meta">
-
-                            {% if movie.year %}
-                            <span>{{ movie.year }}</span>
-                            {% endif %}
-
-                            {% if movie.language %}
-                            <span>•</span>
-
-                            <span class="movie-category">
-                                {{ movie.language }}
-                            </span>
-                            {% endif %}
-
-                        </div>
-
-
-                        <div class="movie-card-download">
-
-                            <a
-                                href="{{ url_for(
-                                    'movie_detail',
-                                    movie_id=movie.id
-                                ) }}"
-                                class="btn btn-download"
-                            >
-                                View Movie
-                            </a>
-
-                        </div>
-
-
                     </div>
 
-
-                </article>
-
-
-                {% endfor %}
+                </div>
 
 
-            </div>
+                <div class="movie-info">
+
+                    <a
+                        href="{{ url_for(
+                            'movie_detail',
+                            movie_id=movie.id
+                        ) }}"
+                        class="movie-title"
+                    >
+                        {{ movie.title }}
+                    </a>
 
 
-        </section>
+                    <div class="movie-meta">
 
-
-        {% endif %}
-
-
-
-        {# =================================================
-           WEB SERIES
-        ================================================== #}
-
-        {% set web_series = movies
-            | selectattr('category', 'equalto', 'Web Series')
-            | list
-        %}
-
-
-        {% if web_series %}
-
-
-        <section class="section">
-
-
-            <div class="section-header">
-
-                <h2 class="section-title">
-                    Web Series
-                </h2>
-
-
-                <a
-                    href="{{ url_for(
-                        'category',
-                        category_name='Web Series'
-                    ) }}"
-                    class="section-link"
-                >
-                    View All →
-                </a>
-
-            </div>
-
-
-            <div class="movie-grid">
-
-
-                {% for movie in web_series[:6] %}
-
-
-                <article class="movie-card">
-
-
-                    <div class="movie-poster">
-
-
-                        <span class="movie-badge">
-                            SERIES
-                        </span>
-
-
-                        {% if movie.poster %}
-
-                        <img
-                            src="{{ movie.poster }}"
-                            alt="{{ movie.title }} poster"
-                            loading="lazy"
-                            decoding="async"
-                        >
-
+                        {% if movie.year %}
+                        <span>{{ movie.year }}</span>
                         {% endif %}
 
-
-                        <div class="poster-overlay">
-
-                            <a
-                                href="{{ url_for(
-                                    'movie_detail',
-                                    movie_id=movie.id
-                                ) }}"
-                                class="poster-play"
-                                aria-label="View {{ movie.title }}"
-                            >
-                                ▶
-                            </a>
-
-                        </div>
-
+                        {% if movie.language %}
+                        <span>•</span>
+                        <span class="movie-category">
+                            {{ movie.language }}
+                        </span>
+                        {% endif %}
 
                     </div>
 
 
-                    <div class="movie-info">
-
+                    <div class="movie-card-download">
 
                         <a
                             href="{{ url_for(
                                 'movie_detail',
                                 movie_id=movie.id
                             ) }}"
-                            class="movie-title"
+                            class="btn btn-download"
                         >
-                            {{ movie.title }}
+                            View Series
                         </a>
-
-
-                        <div class="movie-meta">
-
-                            {% if movie.year %}
-                            <span>{{ movie.year }}</span>
-                            {% endif %}
-
-
-                            {% if movie.language %}
-
-                            <span>•</span>
-
-                            <span class="movie-category">
-                                {{ movie.language }}
-                            </span>
-
-                            {% endif %}
-
-                        </div>
-
-
-                        <div class="movie-card-download">
-
-                            <a
-                                href="{{ url_for(
-                                    'movie_detail',
-                                    movie_id=movie.id
-                                ) }}"
-                                class="btn btn-download"
-                            >
-                                View Series
-                            </a>
-
-                        </div>
-
 
                     </div>
 
+                </div>
 
-                </article>
+            </article>
 
+            {% endfor %}
 
-                {% endfor %}
+        </div>
 
+    </section>
 
-            </div>
-
-
-        </section>
-
-
-        {% endif %}
+    {% endif %}
 
 
 
-        {# =================================================
-           BOTTOM AD
-        ================================================== #}
+    {# =================================================
+       BOTTOM 300x250 AD
+    ================================================== #}
 
-        <section
-            class="ad-container"
-            aria-label="Advertisement"
-        >
+    <section
+        class="ad-container"
+        aria-label="Advertisement"
+    >
 
-            <span class="ad-label">
-                Advertisement
-            </span>
+        <span class="ad-label">
+            Advertisement
+        </span>
+
+        <div class="ad-content">
+
+            <!-- ===== ADSTERRA 300x250 START ===== -->
+
+            <script>
+              atOptions = {
+                'key' : '92635afe7ff3a68469d4dc59cbd6b0b6',
+                'format' : 'iframe',
+                'height' : 250,
+                'width' : 300,
+                'params' : {}
+              };
+            </script>
+
+            <script
+                src="https://www.highrevenueformat.com/92635afe7ff3a68469d4dc59cbd6b0b6/invoke.js">
+            </script>
+
+            <!-- ===== ADSTERRA 300x250 END ===== -->
+
+        </div>
+
+    </section>
 
 
-            <div class="ad-content">
-
-                {#
-                ==================================================
-                ADSTERRA — BOTTOM AD
-
-                Recommended:
-
-                • Native Banner
-                • Banner 300x250
-
-                Paste authorized Adsterra code HERE.
-                ==================================================
-                #}
-
-            </div>
-
-
-        </section>
-
-
-    </div>
-
+</div>
+```
 
 </main>
 

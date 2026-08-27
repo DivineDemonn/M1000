@@ -1,10 +1,11 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
 
     <!-- =====================================================
-         M1000 — BASE TEMPLATE
-         Yellow + Black Cinematic Streaming UI
+         M1000 — PREMIUM STREAMING WEBSITE
+         Black + Yellow Cinematic Theme
     ====================================================== -->
 
     <meta charset="UTF-8">
@@ -43,7 +44,10 @@
     <link
         rel="icon"
         type="image/png"
-        href="{{ url_for('static', filename='images/logo.png') }}"
+        href="{{ url_for(
+            'static',
+            filename='images/logo.png'
+        ) }}"
     >
 
 
@@ -69,12 +73,15 @@
 
 
     <!-- =====================================================
-         MAIN STYLESHEET
+         MAIN CSS
     ====================================================== -->
 
     <link
         rel="stylesheet"
-        href="{{ url_for('static', filename='css/style.css') }}"
+        href="{{ url_for(
+            'static',
+            filename='css/style.css'
+        ) }}"
     >
 
 
@@ -84,10 +91,27 @@
 
     {% block head %}{% endblock %}
 
+
+    <!-- =====================================================
+         ADSTERRA — GLOBAL / HEAD CODE
+         
+         =====================================================
+         IF ADSTERRA GIVES YOU A CODE THAT MUST GO INSIDE
+         <HEAD>, PASTE IT BELOW.
+
+         DO NOT PUT BANNER/NATIVE CODE HERE UNLESS
+         ADSTERRA SPECIFICALLY TELLS YOU TO.
+         =====================================================
+    -->
+
+    <!-- >>> PASTE HEAD-BASED ADSTERRA CODE HERE <<< -->
+
+
 </head>
 
 
 <body>
+
 
 <!-- =========================================================
      PAGE LOADER
@@ -100,10 +124,15 @@
 >
 
     <div class="loader-logo">
+
         <img
-            src="{{ url_for('static', filename='images/logo.png') }}"
+            src="{{ url_for(
+                'static',
+                filename='images/logo.png'
+            ) }}"
             alt=""
         >
+
     </div>
 
     <div class="loader-ring"></div>
@@ -226,9 +255,7 @@
             <div class="nav-actions">
 
 
-                <!-- =============================================
-                     DESKTOP SEARCH
-                ============================================== -->
+                <!-- DESKTOP SEARCH -->
 
                 <form
                     action="{{ url_for('search') }}"
@@ -269,7 +296,6 @@
 
                     </span>
 
-
                     <input
                         type="search"
                         name="q"
@@ -278,7 +304,6 @@
                         maxlength="100"
                         aria-label="Search movies"
                     >
-
 
                     <button
                         type="submit"
@@ -290,9 +315,7 @@
                 </form>
 
 
-                <!-- =============================================
-                     MOBILE SEARCH BUTTON
-                ============================================== -->
+                <!-- MOBILE SEARCH -->
 
                 <button
                     type="button"
@@ -332,9 +355,7 @@
                 </button>
 
 
-                <!-- =============================================
-                     MOBILE MENU BUTTON
-                ============================================== -->
+                <!-- MOBILE MENU -->
 
                 <button
                     type="button"
@@ -400,7 +421,6 @@
 
                     </svg>
 
-
                     <input
                         type="search"
                         name="q"
@@ -411,7 +431,6 @@
                     >
 
                 </div>
-
 
                 <button
                     type="submit"
@@ -426,7 +445,7 @@
 
 
         <!-- =================================================
-             MOBILE SIDE MENU
+             MOBILE MENU
         ================================================== -->
 
         <aside
@@ -434,8 +453,6 @@
             id="mobileMenu"
             aria-hidden="true"
         >
-
-            <!-- MENU HEADER -->
 
             <div class="mobile-menu-header">
 
@@ -458,7 +475,6 @@
 
                 </a>
 
-
                 <button
                     type="button"
                     class="close-menu"
@@ -471,10 +487,7 @@
             </div>
 
 
-            <!-- MENU LINKS -->
-
             <div class="mobile-menu-inner">
-
 
                 <div class="mobile-menu-label">
                     BROWSE
@@ -485,15 +498,8 @@
                     href="{{ url_for('home') }}"
                     class="mobile-nav-link"
                 >
-
-                    <span class="mobile-nav-icon">
-                        ⌂
-                    </span>
-
-                    <span>
-                        Home
-                    </span>
-
+                    <span class="mobile-nav-icon">⌂</span>
+                    <span>Home</span>
                 </a>
 
 
@@ -504,15 +510,8 @@
                     ) }}"
                     class="mobile-nav-link"
                 >
-
-                    <span class="mobile-nav-icon">
-                        HD
-                    </span>
-
-                    <span>
-                        Tamil HD Movies
-                    </span>
-
+                    <span class="mobile-nav-icon">HD</span>
+                    <span>Tamil HD Movies</span>
                 </a>
 
 
@@ -523,15 +522,8 @@
                     ) }}"
                     class="mobile-nav-link"
                 >
-
-                    <span class="mobile-nav-icon">
-                        NEW
-                    </span>
-
-                    <span>
-                        New Movies
-                    </span>
-
+                    <span class="mobile-nav-icon">NEW</span>
+                    <span>New Movies</span>
                 </a>
 
 
@@ -542,15 +534,8 @@
                     ) }}"
                     class="mobile-nav-link"
                 >
-
-                    <span class="mobile-nav-icon">
-                        DUB
-                    </span>
-
-                    <span>
-                        Dubbed Movies
-                    </span>
-
+                    <span class="mobile-nav-icon">DUB</span>
+                    <span>Dubbed Movies</span>
                 </a>
 
 
@@ -561,15 +546,8 @@
                     ) }}"
                     class="mobile-nav-link"
                 >
-
-                    <span class="mobile-nav-icon">
-                        ▶
-                    </span>
-
-                    <span>
-                        Web Series
-                    </span>
-
+                    <span class="mobile-nav-icon">▶</span>
+                    <span>Web Series</span>
                 </a>
 
 
@@ -577,19 +555,10 @@
                     href="{{ url_for('all_movies') }}"
                     class="mobile-nav-link"
                 >
-
-                    <span class="mobile-nav-icon">
-                        +
-                    </span>
-
-                    <span>
-                        All Movies
-                    </span>
-
+                    <span class="mobile-nav-icon">+</span>
+                    <span>All Movies</span>
                 </a>
 
-
-                <!-- MENU DIVIDER -->
 
                 <div class="mobile-menu-divider"></div>
 
@@ -603,21 +572,12 @@
                     href="#"
                     class="mobile-nav-link"
                 >
-
-                    <span class="mobile-nav-icon">
-                        ℹ
-                    </span>
-
-                    <span>
-                        About M1000
-                    </span>
-
+                    <span class="mobile-nav-icon">ℹ</span>
+                    <span>About M1000</span>
                 </a>
 
             </div>
 
-
-            <!-- MENU FOOTER -->
 
             <div class="mobile-menu-footer">
 
@@ -634,9 +594,7 @@
         </aside>
 
 
-        <!-- =================================================
-             MENU OVERLAY
-        ================================================== -->
+        <!-- MENU OVERLAY -->
 
         <div
             class="menu-overlay"
@@ -650,19 +608,35 @@
 
 
 <!-- =========================================================
-     TOP ADVERTISEMENT SLOT
+     AD 1 — SOCIAL BAR
      
+     USE:
+     Adsterra → Social Bar
+
      IMPORTANT:
-     Paste only your authorized Adsterra ad script/code
-     inside this container.
+     Social Bar normally uses its own script and can work
+     globally across the website.
+
+     Paste the EXACT code supplied by Adsterra below.
 ========================================================== -->
 
-{% block top_ad %}
+<!-- >>> START ADSTERRA SOCIAL BAR >>> -->
 
-<div
-    class="ad-container site-top-ad"
-    id="topAd"
->
+<!-- PASTE YOUR ADSTERRA SOCIAL BAR CODE HERE -->
+
+<!-- <<< END ADSTERRA SOCIAL BAR <<< -->
+
+
+<!-- =========================================================
+     TOP ADVERTISEMENT
+     
+     USE:
+     728x90 / Native Banner / other approved unit
+
+     This appears below the navigation.
+========================================================== -->
+
+<div class="ad-container site-top-ad">
 
     <span class="ad-label">
         Advertisement
@@ -670,23 +644,16 @@
 
     <div class="ad-content">
 
-        <!--
-        ======================================================
-        ADSTERRA CODE GOES HERE
+        <!-- =================================================
+             ADSTERRA TOP BANNER / NATIVE CODE
 
-        Example placeholder only.
+             >>> PASTE YOUR ADSTERRA CODE HERE <<<
+        ================================================== -->
 
-        Do NOT paste the ad code into app.py.
-        Put the actual Adsterra code here when available.
-
-        ======================================================
-        -->
 
     </div>
 
 </div>
-
-{% endblock %}
 
 
 <!-- =========================================================
@@ -704,6 +671,34 @@
 
 
 <!-- =========================================================
+     FOOTER AD
+========================================================== -->
+
+<div class="ad-container footer-ad">
+
+    <span class="ad-label">
+        Advertisement
+    </span>
+
+    <div class="ad-content">
+
+        <!-- =================================================
+             ADSTERRA FOOTER AD
+
+             Recommended:
+             300x250 on desktop
+             320x50 on mobile
+
+             >>> PASTE ADSTERRA CODE HERE <<<
+        ================================================== -->
+
+
+    </div>
+
+</div>
+
+
+<!-- =========================================================
      FOOTER
 ========================================================== -->
 
@@ -711,10 +706,6 @@
 
     <div class="footer-main">
 
-
-        <!-- =================================================
-             FOOTER BRAND
-        ================================================== -->
 
         <div class="footer-brand">
 
@@ -737,17 +728,12 @@
 
             </a>
 
-
             <p>
                 Movies. Series. Endless entertainment.
             </p>
 
         </div>
 
-
-        <!-- =================================================
-             BROWSE
-        ================================================== -->
 
         <div class="footer-column">
 
@@ -789,10 +775,6 @@
         </div>
 
 
-        <!-- =================================================
-             INFORMATION
-        ================================================== -->
-
         <div class="footer-column">
 
             <h3>
@@ -816,10 +798,6 @@
     </div>
 
 
-    <!-- =====================================================
-         FOOTER BOTTOM
-    ====================================================== -->
-
     <div class="footer-bottom">
 
         <p>
@@ -840,7 +818,7 @@
 
 
 <!-- =========================================================
-     MAIN JAVASCRIPT
+     JAVASCRIPT
 ========================================================== -->
 
 <script
@@ -852,12 +830,8 @@
 ></script>
 
 
-<!-- =========================================================
-     PAGE-SPECIFIC JAVASCRIPT
-========================================================== -->
-
 {% block scripts %}{% endblock %}
 
 
 </body>
-</html> 
+</html>

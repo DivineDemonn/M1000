@@ -1,0 +1,373 @@
+# ============================================================
+# M1000 — Flask Movie Website
+# Professional lightweight backend
+# ============================================================
+
+from pathlib import Path
+import json
+
+from flask import (
+    Flask,
+    render_template,
+    request,
+    abort,
+)
+
+
+# ============================================================
+# APP CONFIGURATION
+# ============================================================
+
+BASE_DIR = Path(__file__).resolve().parent
+
+DATA_FILE = BASE_DIR / "data" / "movies.json"
+
+app = Flask(__name__)
+
+app.config.update(
+    JSON_SORT_KEYS=False,
+    TEMPLATES_AUTO_RELOAD=True,
+)
+
+
+# ============================================================
+# DATA HELPERS
+# ============================================================
+
+def load_movies():
+    """
+    Load movie data from data/movies.json.
+
+    Returns:
+        list: Movie dictionaries.
+    """
+
+    if not DATA_FILE.exists():
+        return []
+
+    try:
+        with DATA_FILE.open(
+            "r",
+            encoding="utf-8"
+        ) as file:
+            data = json.load(file)
+
+    except (
+        json.JSONDecodeError,
+        OSError,
+        TypeError
+    ):
+        return []
+
+    # Support either:
+    #
+    # [
+    #   {...},
+    #   {...}
+    # ]
+    #
+    # OR:
+    #
+    # {
+    #   "movies": [...]
+    # }
+
+    if isinstance(data, list):
+        return data
+
+    if isinstance(data, dict):
+        movies = data.get("movies", [])
+
+        if isinstance(movies, list):
+            return movies
+
+    return []
+
+
+def find_movie(movie_id):
+    """
+    Find a movie using its ID.
+    """
+
+    movies = load_movies()
+
+    for movie in movies:
+
+        if str(movie.get("id")) == str(movie_id):
+            return movie
+
+    return None
+
+
+def get_categories():
+    """
+    Return unique movie categories.
+    """
+
+    movies = load_movies()
+
+    categories = set()
+
+    for movie in movies:
+
+        category = movie.get("category")
+
+        if isinstance(category, str) and category.strip():
+            categories.add(category.strip())
+
+    return sorted(
+        categories,
+        key=str.lower
+    )
+
+
+# ============================================================
+# TEMPLATE HELPERS
+# ============================================================
+
+@app.context_processor
+def inject_site_data():
+    """
+    Make common website data available
+    to every template.
+    """
+
+    return {
+        "site_name": "M1000",
+        "categories": get_categories(),
+    }
+
+
+# ============================================================
+# HOME
+# ============================================================
+
+@app.route("/")
+def home():
+
+    movies = load_movies()
+
+    # Featured movie
+    featured = None
+
+    for movie in movies:
+
+        if movie.get("featured") is True:
+            featured = movie
+            break
+
+    # If no featured movie exists,
+    # use the first movie.
+    if featured is None and movies:
+        featured = movies[0]
+
+    # Latest movies
+    latest = movies[:12]
+
+    # Category collections
+    tamil_hd = [
+        movie
+        for movie in movies
+        if movie.get("category") == "Tamil HD Movies"
+    ][:12]
+
+    new_movies = [
+        movie
+        for movie in movies
+        if movie.get("category") == "Tamil New Movies"
+    ][:12]
+
+    dubbed = [
+        movie
+        for movie in movies
+        if movie.get("category") == "Tamil Dubbed Movies"
+    ][:12]
+
+    web_series = [
+        movie
+        for movie in movies
+        if movie.get("category") == "Web Series"
+    ][:12]
+
+    return render_template(
+        "home.html",
+        featured=featured,
+        latest=latest,
+        tamil_hd=tamil_hd,
+        new_movies=new_movies,
+        dubbed=dubbed,
+        web_series=web_series,
+    )
+
+
+# ============================================================
+# MOVIE DETAILS
+# ============================================================
+
+@app.route("/movie/<movie_id>")
+def movie_detail(movie_id):
+
+    movie = find_movie(movie_id)
+
+    if movie is None:
+        abort(404)
+
+    # Similar movies
+    category = movie.get("category")
+
+    related = [
+        item
+        for item in load_movies()
+        if (
+            item.get("id") != movie.get("id")
+            and item.get("category") == category
+        )
+    ][:8]
+
+    return render_template(
+        "movie.html",
+        movie=movie,
+        related=related,
+    )
+
+
+# ============================================================
+# CATEGORY
+# ============================================================
+
+@app.route("/category/<path:category_name>")
+def category(category_name):
+
+    movies = [
+        movie
+        for movie in load_movies()
+        if str(movie.get("category", "")).lower()
+        == category_name.lower()
+    ]
+
+    return render_template(
+        "category.html",
+        movies=movies,
+        category_name=category_name,
+    )
+
+
+# ============================================================
+# SEARCH
+# ============================================================
+
+@app.route("/search")
+def search():
+
+    query = request.args.get(
+        "q",
+        ""
+    ).strip()
+
+    results = []
+
+    if query:
+
+        search_text = query.lower()
+
+        for movie in load_movies():
+
+            searchable = " ".join(
+                str(movie.get(field, ""))
+                for field in (
+                    "title",
+                    "original_title",
+                    "description",
+                    "category",
+                    "genre",
+                    "year",
+                    "language",
+                )
+            ).lower()
+
+            if search_text in searchable:
+                results.append(movie)
+
+    return render_template(
+        "search.html",
+        query=query,
+        results=results,
+    )
+
+
+# ============================================================
+# LEGAL PAGES
+# ============================================================
+
+@app.route("/privacy")
+def privacy():
+
+    return render_template(
+        "privacy.html"
+    )
+
+
+@app.route("/dmca")
+def dmca():
+
+    return render_template(
+        "dmca.html"
+    )
+
+
+@app.route("/contact")
+def contact():
+
+    return render_template(
+        "contact.html"
+    )
+
+
+# ============================================================
+# 404
+# ============================================================
+
+@app.errorhandler(404)
+def page_not_found(error):
+
+    return render_template(
+        "404.html"
+    ), 404
+
+
+# ============================================================
+# 500
+# ============================================================
+
+@app.errorhandler(500)
+def internal_server_error(error):
+
+    return render_template(
+        "500.html"
+    ), 500
+
+
+# ============================================================
+# HEALTH CHECK
+# ============================================================
+
+@app.route("/health")
+def health():
+
+    return {
+        "status": "ok",
+        "site": "M1000"
+    }
+
+
+# ============================================================
+# DEVELOPMENT SERVER
+# ============================================================
+
+if __name__ == "__main__":
+
+    app.run(
+        host="0.0.0.0",
+        port=5000,
+        debug=True,
+    )

@@ -1,714 +1,1046 @@
 {# =========================================================
 M1000 — PREMIUM MOVIE DETAILS PAGE
 File: templates/movie.html
-Theme: Premium Black + Gold
 
-Adsterra:
-320x50 Banner
-Key: dbac2fbb1c68b75c745275fea665dccc
+Theme:
+Black + Gold / Yellow Cinematic
+
+Works with:
+- app.py
+- movies.json
+- base.html
+- style.css
+
+Supports:
+- Poster
+- Backdrop
+- Screenshots
+- Genres
+- Movie information
+- Download options
+- Related movies
+- Watch URL
+- 320x50 Adsterra
+
+IMPORTANT:
+base.html already contains the global <main>.
+Therefore this file must NOT create another <main>.
 ========================================================= #}
+
 
 {% extends "base.html" %}
 
+
 {# =========================================================
-PAGE TITLE
+   PAGE TITLE
 ========================================================= #}
 
 {% block title %}
-{{ movie.title }} — M1000
+
+{{ movie.title | default('Movie') }} — M1000
+
 {% endblock %}
 
+
+
 {# =========================================================
-MAIN CONTENT
+   PAGE-SPECIFIC HEAD
+========================================================= #}
+
+{% block head %}
+
+<meta
+    name="description"
+    content="{{ movie.description | default('Watch and discover movies on M1000.') }}"
+>
+
+{% endblock %}
+
+
+
+{# =========================================================
+   MAIN CONTENT
 ========================================================= #}
 
 {% block content %}
 
-<main class="movie-page">
+<div class="movie-page">
 
-```
-{# =====================================================
-   TOP AD — 320x50
-====================================================== #}
 
-<div
-    class="ad-container site-top-ad"
-    aria-label="Advertisement"
->
+    {# =====================================================
+       TOP 320x50 AD
 
-    <span class="ad-label">
-        Advertisement
-    </span>
+       NOTE:
+       base.html also contains global ads.
+       This ad belongs specifically to the movie page.
+    ====================================================== #}
 
-    <div class="ad-content">
+    <section
+        class="ad-container site-top-ad"
+        aria-label="Advertisement"
+    >
 
-        <!-- =================================================
-             ADSTERRA 320x50 — TOP
-        ================================================== -->
+        <span class="ad-label">
+            Advertisement
+        </span>
 
-        <script>
-          atOptions = {
-            'key' : 'dbac2fbb1c68b75c745275fea665dccc',
-            'format' : 'iframe',
-            'height' : 50,
-            'width' : 320,
-            'params' : {}
-          };
-        </script>
 
-        <script src="https://www.highrevenueformat.com/dbac2fbb1c68b75c745275fea665dccc/invoke.js"></script>
+        <div class="ad-content">
 
-    </div>
+            <!-- =============================================
+                 ADSTERRA 320x50
+            ============================================== -->
 
-</div>
-
-
-
-{# =====================================================
-   MOVIE DETAIL
-====================================================== #}
-
-<section class="movie-detail">
-
-    <div class="page-container">
-
-        <div class="movie-detail-layout">
-
-
-            {# =================================================
-               POSTER
-            ================================================== #}
-
-            <div class="movie-detail-poster">
-
-                {% if movie.poster %}
-
-                <img
-                    src="{{ movie.poster }}"
-                    alt="{{ movie.title }}"
-                    loading="eager"
-                    fetchpriority="high"
-                    onerror="this.classList.add('image-error');"
-                >
-
-                {% else %}
-
-                <div
-                    class="image-error"
-                    aria-label="Poster unavailable"
-                ></div>
-
-                {% endif %}
-
-            </div>
-
-
-
-            {# =================================================
-               MOVIE INFORMATION
-            ================================================== #}
-
-            <div class="movie-detail-content">
-
-
-                {# =================================================
-                   BADGE
-                ================================================== #}
-
-                {% if movie.badge %}
-
-                <div class="hero-badge">
-                    {{ movie.badge }}
-                </div>
-
-                {% elif movie.type == "series" %}
-
-                <div class="hero-badge">
-                    SERIES
-                </div>
-
-                {% endif %}
-
-
-
-                {# =================================================
-                   TITLE
-                ================================================== #}
-
-                <h1 class="movie-detail-title">
-                    {{ movie.title }}
-                </h1>
-
-
-
-                {# =================================================
-                   METADATA
-                ================================================== #}
-
-                <div class="movie-detail-meta">
-
-                    {% if movie.year %}
-
-                    <span>
-                        📅 {{ movie.year }}
-                    </span>
-
-                    {% endif %}
-
-
-                    {% if movie.rating %}
-
-                    <span>
-                        ⭐ {{ movie.rating }}
-                    </span>
-
-                    {% endif %}
-
-
-                    {% if movie.language %}
-
-                    <span>
-                        🌐 {{ movie.language }}
-                    </span>
-
-                    {% endif %}
-
-
-                    {% if movie.quality %}
-
-                    <span>
-                        🎞️ {{ movie.quality }}
-                    </span>
-
-                    {% endif %}
-
-
-                    {% if movie.duration %}
-
-                    <span>
-                        ⏱️ {{ movie.duration }}
-                    </span>
-
-                    {% endif %}
-
-
-                    {% if movie.certificate %}
-
-                    <span>
-                        {{ movie.certificate }}
-                    </span>
-
-                    {% endif %}
-
-
-                    {% if movie.category %}
-
-                    <span>
-                        • {{ movie.category }}
-                    </span>
-
-                    {% endif %}
-
-                </div>
-
-
-
-                {# =================================================
-                   GENRE
-                ================================================== #}
-
-                {% if movie.genre %}
-
-                <div class="movie-detail-meta">
-
-                    {% for genre in movie.genre %}
-
-                    <span>
-                        {{ genre }}
-                    </span>
-
-                    {% endfor %}
-
-                </div>
-
-                {% endif %}
-
-
-
-                {# =================================================
-                   DESCRIPTION
-                ================================================== #}
-
-                {% if movie.description %}
-
-                <p class="movie-detail-description">
-                    {{ movie.description }}
-                </p>
-
-                {% endif %}
-
-
-
-                {# =================================================
-                   ACTION BUTTONS
-                ================================================== #}
-
-                <div class="hero-buttons">
-
-
-                    {% if movie.watch_url %}
-
-                    <a
-                        href="{{ movie.watch_url }}"
-                        class="btn btn-primary"
-                        target="_blank"
-                        rel="noopener noreferrer"
-                    >
-                        ▶ Watch Now
-                    </a>
-
-                    {% endif %}
-
-
-                    {% if movie.downloads %}
-
-                    <a
-                        href="#download"
-                        class="btn btn-secondary"
-                    >
-                        ⬇ Download
-                    </a>
-
-                    {% endif %}
-
-                </div>
-
-
-            </div>
-
-        </div>
-
-
-        {# =====================================================
-           AD — BEFORE DOWNLOAD
-           THIS IS THE IMPORTANT DOWNLOAD AREA AD
-        ====================================================== #}
-
-        <div
-            class="ad-container download-ad"
-            aria-label="Advertisement"
-        >
-
-            <span class="ad-label">
-                Advertisement
-            </span>
-
-            <div class="ad-content">
-
-                <!-- =================================================
-                     ADSTERRA 320x50 — BEFORE DOWNLOAD
-                ================================================== -->
-
-                <script>
-                  atOptions = {
+            <script>
+                atOptions = {
                     'key' : 'dbac2fbb1c68b75c745275fea665dccc',
                     'format' : 'iframe',
                     'height' : 50,
                     'width' : 320,
                     'params' : {}
-                  };
-                </script>
+                };
+            </script>
 
-                <script src="https://www.highrevenueformat.com/dbac2fbb1c68b75c745275fea665dccc/invoke.js"></script>
-
-            </div>
+            <script
+                src="https://www.highrevenueformat.com/dbac2fbb1c68b75c745275fea665dccc/invoke.js">
+            </script>
 
         </div>
 
+    </section>
 
 
-        {# =====================================================
-           DOWNLOAD SECTION
-        ====================================================== #}
 
-        <section
-            class="download-section"
-            id="download"
-        >
+    {# =====================================================
+       MOVIE HERO / BACKDROP
+    ====================================================== #}
 
-            <h2 class="download-title">
-                Download Options
-            </h2>
+    <section class="movie-detail">
+
+        <div class="page-container">
 
 
-            {% if movie.downloads %}
+            {# =================================================
+               BACKDROP
+            ================================================== #}
 
-            <div class="download-grid">
+            {% if movie.backdrop %}
 
-                {% for download in movie.downloads %}
+            <div class="movie-backdrop">
 
-                <div class="download-item">
+                <img
+                    src="{{ movie.backdrop }}"
+                    alt=""
+                    class="movie-backdrop-image"
+                    loading="eager"
+                    fetchpriority="high"
+                    decoding="async"
+                    onerror="this.style.display='none';"
+                >
 
-
-                    <div class="download-quality">
-                        {{ download.quality }}
-                    </div>
-
-
-                    {% if download.size %}
-
-                    <div class="download-size">
-                        {{ download.size }}
-                    </div>
-
-                    {% endif %}
-
-
-                    {% if download.url and download.url != "#" %}
-
-                    <a
-                        href="{{ download.url }}"
-                        class="btn btn-download"
-                        target="_blank"
-                        rel="noopener noreferrer"
-                    >
-                        ⬇ Download
-                    </a>
-
-                    {% else %}
-
-                    <span
-                        class="btn btn-download"
-                        aria-disabled="true"
-                    >
-                        Link Unavailable
-                    </span>
-
-                    {% endif %}
-
-
-                </div>
-
-                {% endfor %}
-
-            </div>
-
-
-            {% else %}
-
-            <div class="empty-state">
-
-                <div class="empty-icon">
-                    ⬇
-                </div>
-
-                <h2>
-                    Download unavailable
-                </h2>
-
-                <p>
-                    Download links are currently unavailable.
-                </p>
+                <div class="movie-backdrop-overlay"></div>
 
             </div>
 
             {% endif %}
 
-        </section>
 
 
+            {# =================================================
+               MOVIE DETAIL LAYOUT
+            ================================================== #}
 
-        {# =====================================================
-           AD — AFTER DOWNLOAD
-        ====================================================== #}
-
-        <div
-            class="ad-container download-ad"
-            aria-label="Advertisement"
-        >
-
-            <span class="ad-label">
-                Advertisement
-            </span>
-
-            <div class="ad-content">
-
-                <!-- =================================================
-                     ADSTERRA 320x50 — AFTER DOWNLOAD
-                ================================================== -->
-
-                <script>
-                  atOptions = {
-                    'key' : 'dbac2fbb1c68b75c745275fea665dccc',
-                    'format' : 'iframe',
-                    'height' : 50,
-                    'width' : 320,
-                    'params' : {}
-                  };
-                </script>
-
-                <script src="https://www.highrevenueformat.com/dbac2fbb1c68b75c745275fea665dccc/invoke.js"></script>
-
-            </div>
-
-        </div>
+            <div class="movie-detail-layout">
 
 
+                {# =================================================
+                   POSTER
+                ================================================== #}
 
-        {# =====================================================
-           SCREENSHOTS
-        ====================================================== #}
+                <div class="movie-detail-poster">
 
-        {% if movie.screenshots %}
-
-        <section class="screenshots-section">
-
-            <div class="section-header">
-
-                <h2 class="section-title">
-                    Screenshots
-                </h2>
-
-            </div>
-
-
-            <div class="screenshots-grid">
-
-                {% for screenshot in movie.screenshots %}
-
-                <a
-                    href="{{ screenshot }}"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    class="screenshot"
-                >
+                    {% if movie.poster %}
 
                     <img
-                        src="{{ screenshot }}"
-                        alt="{{ movie.title }} screenshot {{ loop.index }}"
-                        loading="lazy"
+                        src="{{ movie.poster }}"
+                        alt="{{ movie.title | default('Movie') }} poster"
+                        class="movie-poster-image"
+                        loading="eager"
+                        fetchpriority="high"
                         decoding="async"
                         onerror="this.classList.add('image-error');"
                     >
 
-                </a>
+                    {% else %}
 
-                {% endfor %}
+                    <div
+                        class="movie-poster-placeholder"
+                        role="img"
+                        aria-label="Poster unavailable"
+                    >
+
+                        <span>
+                            🎬
+                        </span>
+
+                        <small>
+                            Poster unavailable
+                        </small>
+
+                    </div>
+
+                    {% endif %}
+
+                </div>
+
+
+
+                {# =================================================
+                   MOVIE INFORMATION
+                ================================================== #}
+
+                <div class="movie-detail-content">
+
+
+                    {# =================================================
+                       BADGE
+                    ================================================== #}
+
+                    {% if movie.badge %}
+
+                    <span class="hero-badge">
+                        {{ movie.badge }}
+                    </span>
+
+                    {% elif movie.type == "series" %}
+
+                    <span class="hero-badge">
+                        SERIES
+                    </span>
+
+                    {% elif movie.category == "Web Series" %}
+
+                    <span class="hero-badge">
+                        SERIES
+                    </span>
+
+                    {% endif %}
+
+
+
+                    {# =================================================
+                       TITLE
+                    ================================================== #}
+
+                    <h1 class="movie-detail-title">
+
+                        {{ movie.title | default('Untitled Movie') }}
+
+                    </h1>
+
+
+
+                    {# =================================================
+                       META INFORMATION
+                    ================================================== #}
+
+                    <div class="movie-detail-meta">
+
+
+                        {% if movie.year %}
+
+                        <span>
+                            📅 {{ movie.year }}
+                        </span>
+
+                        {% endif %}
+
+
+
+                        {% if movie.rating %}
+
+                        <span>
+                            ⭐ {{ movie.rating }}
+                        </span>
+
+                        {% endif %}
+
+
+
+                        {% if movie.language %}
+
+                        <span>
+                            🌐 {{ movie.language }}
+                        </span>
+
+                        {% endif %}
+
+
+
+                        {% if movie.quality %}
+
+                        <span>
+                            🎞️ {{ movie.quality }}
+                        </span>
+
+                        {% endif %}
+
+
+
+                        {% if movie.duration %}
+
+                        <span>
+                            ⏱️ {{ movie.duration }}
+                        </span>
+
+                        {% endif %}
+
+
+
+                        {% if movie.certificate %}
+
+                        <span>
+                            {{ movie.certificate }}
+                        </span>
+
+                        {% endif %}
+
+                    </div>
+
+
+
+                    {# =================================================
+                       CATEGORY
+                    ================================================== #}
+
+                    {% if movie.category %}
+
+                    <div class="movie-category-row">
+
+                        <span class="movie-category-label">
+                            Category
+                        </span>
+
+                        <a
+                            href="{{ url_for(
+                                'category',
+                                category_name=movie.category
+                            ) }}"
+                            class="movie-category-link"
+                        >
+                            {{ movie.category }}
+                        </a>
+
+                    </div>
+
+                    {% endif %}
+
+
+
+                    {# =================================================
+                       GENRES
+                    ================================================== #}
+
+                    {% if movie.genre %}
+
+                    <div class="movie-genres">
+
+                        {% if movie.genre is iterable and movie.genre is not string %}
+
+                            {% for genre in movie.genre %}
+
+                            <span class="genre-tag">
+                                {{ genre }}
+                            </span>
+
+                            {% endfor %}
+
+                        {% else %}
+
+                            <span class="genre-tag">
+                                {{ movie.genre }}
+                            </span>
+
+                        {% endif %}
+
+                    </div>
+
+                    {% endif %}
+
+
+
+                    {# =================================================
+                       DESCRIPTION
+                    ================================================== #}
+
+                    {% if movie.description %}
+
+                    <p class="movie-detail-description">
+
+                        {{ movie.description }}
+
+                    </p>
+
+                    {% else %}
+
+                    <p class="movie-detail-description">
+
+                        Discover {{ movie.title | default('this movie') }}
+                        on M1000.
+
+                    </p>
+
+                    {% endif %}
+
+
+
+                    {# =================================================
+                       ACTION BUTTONS
+                    ================================================== #}
+
+                    <div class="hero-buttons">
+
+
+                        {% if movie.watch_url %}
+
+                        <a
+                            href="{{ movie.watch_url }}"
+                            class="btn btn-primary"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                        >
+
+                            <span aria-hidden="true">
+                                ▶
+                            </span>
+
+                            Watch Now
+
+                        </a>
+
+                        {% endif %}
+
+
+
+                        {% if movie.downloads %}
+
+                        <a
+                            href="#download"
+                            class="btn btn-secondary"
+                        >
+
+                            <span aria-hidden="true">
+                                ↓
+                            </span>
+
+                            Download
+
+                        </a>
+
+                        {% endif %}
+
+                    </div>
+
+                </div>
 
             </div>
 
-        </section>
-
-        {% endif %}
 
 
+            {# =====================================================
+               AD — BEFORE DOWNLOAD
+            ====================================================== #}
 
-        {# =====================================================
-           MOVIE INFORMATION
-        ====================================================== #}
+            <section
+                class="ad-container download-ad"
+                aria-label="Advertisement"
+            >
 
-        <section class="section">
-
-            <div class="section-header">
-
-                <h2 class="section-title">
-                    Movie Information
-                </h2>
-
-            </div>
+                <span class="ad-label">
+                    Advertisement
+                </span>
 
 
-            <div class="download-section">
+                <div class="ad-content">
+
+                    <!-- =============================================
+                         ADSTERRA 320x50
+                    ============================================== -->
+
+                    <script>
+                        atOptions = {
+                            'key' : 'dbac2fbb1c68b75c745275fea665dccc',
+                            'format' : 'iframe',
+                            'height' : 50,
+                            'width' : 320,
+                            'params' : {}
+                        };
+                    </script>
+
+                    <script
+                        src="https://www.highrevenueformat.com/dbac2fbb1c68b75c745275fea665dccc/invoke.js">
+                    </script>
+
+                </div>
+
+            </section>
 
 
-                {% if movie.title %}
 
-                <div class="download-item">
+            {# =====================================================
+               DOWNLOAD SECTION
+            ====================================================== #}
 
-                    <span class="download-quality">
-                        Title
-                    </span>
+            <section
+                class="download-section"
+                id="download"
+            >
 
-                    <span class="download-size">
-                        {{ movie.title }}
-                    </span>
+                <div class="section-header">
+
+                    <h2 class="section-title">
+                        Download Options
+                    </h2>
+
+                </div>
+
+
+                {% if movie.downloads %}
+
+                <div class="download-grid">
+
+
+                    {% for download in movie.downloads %}
+
+                    <div class="download-item">
+
+
+                        {# =========================================
+                           QUALITY
+                        ========================================== #}
+
+                        <div class="download-quality">
+
+                            {{ download.quality | default('Quality') }}
+
+                        </div>
+
+
+
+                        {# =========================================
+                           FILE SIZE
+                        ========================================== #}
+
+                        {% if download.size %}
+
+                        <div class="download-size">
+
+                            {{ download.size }}
+
+                        </div>
+
+                        {% endif %}
+
+
+
+                        {# =========================================
+                           DOWNLOAD BUTTON
+                        ========================================== #}
+
+                        {% if download.url
+                              and download.url != "#"
+                              and download.url != ""
+                        %}
+
+                        <a
+                            href="{{ download.url }}"
+                            class="btn btn-download"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            download
+                        >
+
+                            <span aria-hidden="true">
+                                ↓
+                            </span>
+
+                            Download
+
+                        </a>
+
+                        {% else %}
+
+                        <span
+                            class="btn btn-download disabled"
+                            aria-disabled="true"
+                        >
+
+                            Link Unavailable
+
+                        </span>
+
+                        {% endif %}
+
+                    </div>
+
+                    {% endfor %}
+
+                </div>
+
+
+                {% else %}
+
+
+                {# =============================================
+                   NO DOWNLOADS
+                ============================================== #}
+
+                <div class="empty-state">
+
+                    <div class="empty-icon">
+                        ↓
+                    </div>
+
+                    <h2>
+                        Download unavailable
+                    </h2>
+
+                    <p>
+                        Download links are currently unavailable.
+                    </p>
 
                 </div>
 
                 {% endif %}
 
-
-
-                {% if movie.original_title %}
-
-                <div class="download-item">
-
-                    <span class="download-quality">
-                        Original Title
-                    </span>
-
-                    <span class="download-size">
-                        {{ movie.original_title }}
-                    </span>
-
-                </div>
-
-                {% endif %}
+            </section>
 
 
 
-                {% if movie.year %}
+            {# =====================================================
+               AD — AFTER DOWNLOAD
+            ====================================================== #}
 
-                <div class="download-item">
+            <section
+                class="ad-container download-ad"
+                aria-label="Advertisement"
+            >
 
-                    <span class="download-quality">
-                        Release Year
-                    </span>
-
-                    <span class="download-size">
-                        {{ movie.year }}
-                    </span>
-
-                </div>
-
-                {% endif %}
+                <span class="ad-label">
+                    Advertisement
+                </span>
 
 
+                <div class="ad-content">
 
-                {% if movie.language %}
+                    <!-- =============================================
+                         ADSTERRA 320x50
+                    ============================================== -->
 
-                <div class="download-item">
+                    <script>
+                        atOptions = {
+                            'key' : 'dbac2fbb1c68b75c745275fea665dccc',
+                            'format' : 'iframe',
+                            'height' : 50,
+                            'width' : 320,
+                            'params' : {}
+                        };
+                    </script>
 
-                    <span class="download-quality">
-                        Language
-                    </span>
-
-                    <span class="download-size">
-                        {{ movie.language }}
-                    </span>
+                    <script
+                        src="https://www.highrevenueformat.com/dbac2fbb1c68b75c745275fea665dccc/invoke.js">
+                    </script>
 
                 </div>
 
-                {% endif %}
+            </section>
 
 
 
-                {% if movie.category %}
+            {# =====================================================
+               SCREENSHOTS
+            ====================================================== #}
 
-                <div class="download-item">
+            {% if movie.screenshots %}
 
-                    <span class="download-quality">
-                        Category
-                    </span>
+            <section
+                class="screenshots-section"
+                aria-labelledby="screenshots-title"
+            >
 
-                    <span class="download-size">
-                        {{ movie.category }}
-                    </span>
+                <div class="section-header">
 
-                </div>
-
-                {% endif %}
-
-
-
-                {% if movie.duration %}
-
-                <div class="download-item">
-
-                    <span class="download-quality">
-                        Duration
-                    </span>
-
-                    <span class="download-size">
-                        {{ movie.duration }}
-                    </span>
+                    <h2
+                        class="section-title"
+                        id="screenshots-title"
+                    >
+                        Screenshots
+                    </h2>
 
                 </div>
 
-                {% endif %}
+
+                <div class="screenshots-grid">
 
 
+                    {% for screenshot in movie.screenshots %}
 
-                {% if movie.certificate %}
-
-                <div class="download-item">
-
-                    <span class="download-quality">
-                        Certificate
-                    </span>
-
-                    <span class="download-size">
-                        {{ movie.certificate }}
-                    </span>
-
-                </div>
-
-                {% endif %}
-
-
-
-                {% if movie.rating %}
-
-                <div class="download-item">
-
-                    <span class="download-quality">
-                        Rating
-                    </span>
-
-                    <span class="download-size">
-                        ⭐ {{ movie.rating }}
-                    </span>
-
-                </div>
-
-                {% endif %}
-
-
-            </div>
-
-        </section>
-
-
-
-        {# =====================================================
-           RELATED MOVIES
-           Flask app.py sends "similar_movies"
-        ====================================================== #}
-
-        {% if similar_movies %}
-
-        <section class="section">
-
-            <div class="section-header">
-
-                <h2 class="section-title">
-                    You May Also Like
-                </h2>
-
-                <a
-                    href="{{ url_for('home') }}"
-                    class="section-link"
-                >
-                    View All →
-                </a>
-
-            </div>
-
-
-            <div class="movie-grid">
-
-                {% for related in similar_movies %}
-
-                <article class="movie-card">
-
+                    {% if screenshot %}
 
                     <a
-                        href="{{ url_for('movie_detail', movie_id=related.id) }}"
-                        aria-label="View {{ related.title }}"
+                        href="{{ screenshot }}"
+                        class="screenshot"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        aria-label="Open screenshot {{ loop.index }}"
                     >
+
+                        <img
+                            src="{{ screenshot }}"
+                            alt="{{ movie.title | default('Movie') }} screenshot {{ loop.index }}"
+                            loading="lazy"
+                            decoding="async"
+                            onerror="this.classList.add('image-error');"
+                        >
+
+                    </a>
+
+                    {% endif %}
+
+                    {% endfor %}
+
+                </div>
+
+            </section>
+
+            {% endif %}
+
+
+
+            {# =====================================================
+               MOVIE INFORMATION
+            ====================================================== #}
+
+            <section
+                class="section movie-information-section"
+            >
+
+                <div class="section-header">
+
+                    <h2 class="section-title">
+                        Movie Information
+                    </h2>
+
+                </div>
+
+
+                <div class="download-grid">
+
+
+                    {# =============================================
+                       TITLE
+                    ============================================== #}
+
+                    {% if movie.title %}
+
+                    <div class="download-item">
+
+                        <span class="download-quality">
+                            Title
+                        </span>
+
+                        <span class="download-size">
+                            {{ movie.title }}
+                        </span>
+
+                    </div>
+
+                    {% endif %}
+
+
+
+                    {# =============================================
+                       ORIGINAL TITLE
+                    ============================================== #}
+
+                    {% if movie.original_title %}
+
+                    <div class="download-item">
+
+                        <span class="download-quality">
+                            Original Title
+                        </span>
+
+                        <span class="download-size">
+                            {{ movie.original_title }}
+                        </span>
+
+                    </div>
+
+                    {% endif %}
+
+
+
+                    {# =============================================
+                       YEAR
+                    ============================================== #}
+
+                    {% if movie.year %}
+
+                    <div class="download-item">
+
+                        <span class="download-quality">
+                            Release Year
+                        </span>
+
+                        <span class="download-size">
+                            {{ movie.year }}
+                        </span>
+
+                    </div>
+
+                    {% endif %}
+
+
+
+                    {# =============================================
+                       TYPE
+                    ============================================== #}
+
+                    {% if movie.type %}
+
+                    <div class="download-item">
+
+                        <span class="download-quality">
+                            Type
+                        </span>
+
+                        <span class="download-size">
+                            {{ movie.type }}
+                        </span>
+
+                    </div>
+
+                    {% endif %}
+
+
+
+                    {# =============================================
+                       LANGUAGE
+                    ============================================== #}
+
+                    {% if movie.language %}
+
+                    <div class="download-item">
+
+                        <span class="download-quality">
+                            Language
+                        </span>
+
+                        <span class="download-size">
+                            {{ movie.language }}
+                        </span>
+
+                    </div>
+
+                    {% endif %}
+
+
+
+                    {# =============================================
+                       CATEGORY
+                    ============================================== #}
+
+                    {% if movie.category %}
+
+                    <div class="download-item">
+
+                        <span class="download-quality">
+                            Category
+                        </span>
+
+                        <span class="download-size">
+                            {{ movie.category }}
+                        </span>
+
+                    </div>
+
+                    {% endif %}
+
+
+
+                    {# =============================================
+                       GENRE
+                    ============================================== #}
+
+                    {% if movie.genre %}
+
+                    <div class="download-item">
+
+                        <span class="download-quality">
+                            Genre
+                        </span>
+
+                        <span class="download-size">
+
+                            {% if movie.genre is iterable
+                                  and movie.genre is not string
+                            %}
+
+                                {{ movie.genre | join(', ') }}
+
+                            {% else %}
+
+                                {{ movie.genre }}
+
+                            {% endif %}
+
+                        </span>
+
+                    </div>
+
+                    {% endif %}
+
+
+
+                    {# =============================================
+                       DURATION
+                    ============================================== #}
+
+                    {% if movie.duration %}
+
+                    <div class="download-item">
+
+                        <span class="download-quality">
+                            Duration
+                        </span>
+
+                        <span class="download-size">
+                            {{ movie.duration }}
+                        </span>
+
+                    </div>
+
+                    {% endif %}
+
+
+
+                    {# =============================================
+                       CERTIFICATE
+                    ============================================== #}
+
+                    {% if movie.certificate %}
+
+                    <div class="download-item">
+
+                        <span class="download-quality">
+                            Certificate
+                        </span>
+
+                        <span class="download-size">
+                            {{ movie.certificate }}
+                        </span>
+
+                    </div>
+
+                    {% endif %}
+
+
+
+                    {# =============================================
+                       RATING
+                    ============================================== #}
+
+                    {% if movie.rating %}
+
+                    <div class="download-item">
+
+                        <span class="download-quality">
+                            Rating
+                        </span>
+
+                        <span class="download-size">
+                            ⭐ {{ movie.rating }}
+                        </span>
+
+                    </div>
+
+                    {% endif %}
+
+
+
+                    {# =============================================
+                       FEATURED
+                    ============================================== #}
+
+                    {% if movie.featured is defined %}
+
+                    <div class="download-item">
+
+                        <span class="download-quality">
+                            Featured
+                        </span>
+
+                        <span class="download-size">
+
+                            {% if movie.featured %}
+                                Yes
+                            {% else %}
+                                No
+                            {% endif %}
+
+                        </span>
+
+                    </div>
+
+                    {% endif %}
+
+                </div>
+
+            </section>
+
+
+
+            {# =====================================================
+               RELATED MOVIES
+            ====================================================== #}
+
+            {% if similar_movies %}
+
+            <section
+                class="section related-movies-section"
+            >
+
+                <div class="section-header">
+
+                    <h2 class="section-title">
+                        You May Also Like
+                    </h2>
+
+                    <a
+                        href="{{ url_for('all_movies') }}"
+                        class="section-link"
+                    >
+                        View All →
+                    </a>
+
+                </div>
+
+
+                <div class="movie-grid">
+
+
+                    {% for related in similar_movies %}
+
+                    <article class="movie-card">
+
 
                         <div class="movie-poster">
 
+
+                            {# =====================================
+                               RELATED BADGE
+                            ====================================== #}
 
                             {% if related.badge %}
 
@@ -716,8 +1048,19 @@ MAIN CONTENT
                                 {{ related.badge }}
                             </span>
 
+                            {% elif related.type == "series" %}
+
+                            <span class="movie-badge">
+                                SERIES
+                            </span>
+
                             {% endif %}
 
+
+
+                            {# =====================================
+                               RELATED QUALITY
+                            ====================================== #}
 
                             {% if related.quality %}
 
@@ -728,38 +1071,79 @@ MAIN CONTENT
                             {% endif %}
 
 
+
+                            {# =====================================
+                               RELATED POSTER
+                            ====================================== #}
+
                             {% if related.poster %}
 
                             <img
                                 src="{{ related.poster }}"
-                                alt="{{ related.title }}"
+                                alt="{{ related.title | default('Movie') }} poster"
                                 loading="lazy"
                                 decoding="async"
                                 onerror="this.classList.add('image-error');"
                             >
 
+                            {% else %}
+
+                            <div class="movie-poster-placeholder">
+
+                                <span>
+                                    🎬
+                                </span>
+
+                            </div>
+
                             {% endif %}
 
 
+
+                            {# =====================================
+                               OVERLAY
+                            ====================================== #}
+
                             <div class="poster-overlay">
 
-                                <span class="poster-play">
+                                <a
+                                    href="{{ url_for(
+                                        'movie_detail',
+                                        movie_id=related.id
+                                    ) }}"
+                                    class="poster-play"
+                                    aria-label="View {{ related.title }}"
+                                >
                                     ▶
-                                </span>
+                                </a>
 
                             </div>
 
                         </div>
 
 
+
+                        {# =========================================
+                           RELATED INFORMATION
+                        ========================================== #}
+
                         <div class="movie-info">
 
-                            <h3 class="movie-title">
-                                {{ related.title }}
-                            </h3>
+                            <a
+                                href="{{ url_for(
+                                    'movie_detail',
+                                    movie_id=related.id
+                                ) }}"
+                                class="movie-title"
+                            >
+
+                                {{ related.title | default('Untitled') }}
+
+                            </a>
 
 
                             <div class="movie-meta">
+
 
                                 {% if related.year %}
 
@@ -770,37 +1154,101 @@ MAIN CONTENT
                                 {% endif %}
 
 
+
+                                {% if related.year
+                                      and related.rating
+                                %}
+
+                                <span>
+                                    •
+                                </span>
+
+                                {% endif %}
+
+
+
                                 {% if related.rating %}
 
                                 <span>
-                                    • ⭐ {{ related.rating }}
+                                    ⭐ {{ related.rating }}
                                 </span>
 
                                 {% endif %}
 
                             </div>
 
+
+                            <div class="movie-card-download">
+
+                                <a
+                                    href="{{ url_for(
+                                        'movie_detail',
+                                        movie_id=related.id
+                                    ) }}"
+                                    class="btn btn-download"
+                                >
+                                    View Movie
+                                </a>
+
+                            </div>
+
                         </div>
 
-                    </a>
+                    </article>
+
+                    {% endfor %}
+
+                </div>
+
+            </section>
+
+            {% endif %}
 
 
-                </article>
 
-                {% endfor %}
+            {# =====================================================
+               FINAL MOVIE PAGE AD
+            ====================================================== #}
 
-            </div>
+            <section
+                class="ad-container movie-bottom-ad"
+                aria-label="Advertisement"
+            >
 
-        </section>
+                <span class="ad-label">
+                    Advertisement
+                </span>
 
-        {% endif %}
+
+                <div class="ad-content">
+
+                    <!-- =============================================
+                         ADSTERRA 320x50
+                    ============================================== -->
+
+                    <script>
+                        atOptions = {
+                            'key' : 'dbac2fbb1c68b75c745275fea665dccc',
+                            'format' : 'iframe',
+                            'height' : 50,
+                            'width' : 320,
+                            'params' : {}
+                        };
+                    </script>
+
+                    <script
+                        src="https://www.highrevenueformat.com/dbac2fbb1c68b75c745275fea665dccc/invoke.js">
+                    </script>
+
+                </div>
+
+            </section>
 
 
-    </div>
+        </div>
 
-</section>
-```
+    </section>
 
-</main>
+</div>
 
 {% endblock %}

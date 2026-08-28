@@ -5,7 +5,8 @@
 
     <!-- =====================================================
          M1000 — PREMIUM STREAMING WEBSITE
-         Black + Yellow Cinematic Theme
+         BLACK + GOLD / YELLOW CINEMATIC THEME
+         File: templates/base.html
     ====================================================== -->
 
     <meta charset="UTF-8">
@@ -30,9 +31,15 @@
         content="M1000 — Movies, series and entertainment."
     >
 
+    <meta
+        name="robots"
+        content="index, follow"
+    >
+
     <title>
         {% block title %}
-            {{ site_name }} — {{ site_tagline }}
+            {{ site_name | default('M1000') }} —
+            {{ site_tagline | default('Movies. Series. Endless Entertainment.') }}
         {% endblock %}
     </title>
 
@@ -44,6 +51,12 @@
     <link
         rel="icon"
         type="image/png"
+        href="{{ url_for('static', filename='images/logo.png') }}"
+    >
+
+
+    <link
+        rel="apple-touch-icon"
         href="{{ url_for('static', filename='images/logo.png') }}"
     >
 
@@ -92,8 +105,7 @@
 
 
 <!-- =========================================================
-     ADSTERRA — POPUNDER
-     GLOBAL
+     ADSTERRA — GLOBAL POPUNDER
 ========================================================== -->
 
 <script
@@ -102,8 +114,7 @@
 
 
 <!-- =========================================================
-     ADSTERRA — SOCIAL BAR
-     GLOBAL
+     ADSTERRA — GLOBAL SOCIAL BAR
 ========================================================== -->
 
 <script
@@ -126,11 +137,16 @@
         <img
             src="{{ url_for('static', filename='images/logo.png') }}"
             alt=""
+            width="70"
+            height="70"
         >
 
     </div>
 
-    <div class="loader-ring"></div>
+    <div
+        class="loader-ring"
+        aria-hidden="true"
+    ></div>
 
 </div>
 
@@ -165,14 +181,19 @@
                 <span class="brand-logo-wrap">
 
                     <img
-                        src="{{ url_for('static', filename='images/logo.png') }}"
+                        src="{{ url_for(
+                            'static',
+                            filename='images/logo.png'
+                        ) }}"
                         alt="M1000"
                         class="brand-logo"
                         width="40"
                         height="40"
+                        loading="eager"
                     >
 
                 </span>
+
 
                 <span class="brand-text">
                     M1000
@@ -188,45 +209,97 @@
             <div
                 class="desktop-nav"
                 role="navigation"
+                aria-label="Desktop navigation"
             >
+
+
+                <!-- HOME -->
 
                 <a
                     href="{{ url_for('home') }}"
-                    class="nav-link"
+                    class="nav-link {% if request.endpoint == 'home' %}active{% endif %}"
+                    {% if request.endpoint == 'home' %}
+                    aria-current="page"
+                    {% endif %}
                 >
                     Home
                 </a>
 
 
+                <!-- TAMIL HD -->
+
                 <a
-                    href="{{ url_for('category', category_name='Tamil HD Movies') }}"
-                    class="nav-link"
+                    href="{{ url_for(
+                        'category',
+                        category_name='Tamil HD Movies'
+                    ) }}"
+                    class="nav-link {% if request.endpoint == 'category' and request.view_args and request.view_args.get('category_name') == 'Tamil HD Movies' %}active{% endif %}"
+                    {% if request.endpoint == 'category' and request.view_args and request.view_args.get('category_name') == 'Tamil HD Movies' %}
+                    aria-current="page"
+                    {% endif %}
                 >
                     Tamil HD
                 </a>
 
 
+                <!-- NEW MOVIES -->
+
                 <a
-                    href="{{ url_for('category', category_name='Tamil New Movies') }}"
-                    class="nav-link"
+                    href="{{ url_for(
+                        'category',
+                        category_name='Tamil New Movies'
+                    ) }}"
+                    class="nav-link {% if request.endpoint == 'category' and request.view_args and request.view_args.get('category_name') == 'Tamil New Movies' %}active{% endif %}"
+                    {% if request.endpoint == 'category' and request.view_args and request.view_args.get('category_name') == 'Tamil New Movies' %}
+                    aria-current="page"
+                    {% endif %}
                 >
                     New Movies
                 </a>
 
 
+                <!-- DUBBED -->
+
                 <a
-                    href="{{ url_for('category', category_name='Tamil Dubbed Movies') }}"
-                    class="nav-link"
+                    href="{{ url_for(
+                        'category',
+                        category_name='Tamil Dubbed Movies'
+                    ) }}"
+                    class="nav-link {% if request.endpoint == 'category' and request.view_args and request.view_args.get('category_name') == 'Tamil Dubbed Movies' %}active{% endif %}"
+                    {% if request.endpoint == 'category' and request.view_args and request.view_args.get('category_name') == 'Tamil Dubbed Movies' %}
+                    aria-current="page"
+                    {% endif %}
                 >
                     Dubbed
                 </a>
 
 
+                <!-- WEB SERIES -->
+
                 <a
-                    href="{{ url_for('category', category_name='Web Series') }}"
-                    class="nav-link"
+                    href="{{ url_for(
+                        'category',
+                        category_name='Web Series'
+                    ) }}"
+                    class="nav-link {% if request.endpoint == 'category' and request.view_args and request.view_args.get('category_name') == 'Web Series' %}active{% endif %}"
+                    {% if request.endpoint == 'category' and request.view_args and request.view_args.get('category_name') == 'Web Series' %}
+                    aria-current="page"
+                    {% endif %}
                 >
                     Web Series
+                </a>
+
+
+                <!-- ALL MOVIES -->
+
+                <a
+                    href="{{ url_for('all_movies') }}"
+                    class="nav-link {% if request.endpoint == 'all_movies' %}active{% endif %}"
+                    {% if request.endpoint == 'all_movies' %}
+                    aria-current="page"
+                    {% endif %}
+                >
+                    All Movies
                 </a>
 
             </div>
@@ -239,7 +312,9 @@
             <div class="nav-actions">
 
 
-                <!-- DESKTOP SEARCH -->
+                <!-- =================================================
+                     DESKTOP SEARCH
+                ================================================== -->
 
                 <form
                     action="{{ url_for('search') }}"
@@ -356,9 +431,9 @@
                     aria-controls="mobileMenu"
                 >
 
-                    <span></span>
-                    <span></span>
-                    <span></span>
+                    <span aria-hidden="true"></span>
+                    <span aria-hidden="true"></span>
+                    <span aria-hidden="true"></span>
 
                 </button>
 
@@ -437,7 +512,7 @@
 
 
         <!-- =================================================
-             MOBILE MENU
+             MOBILE SIDE MENU
         ================================================== -->
 
         <aside
@@ -446,16 +521,27 @@
             aria-hidden="true"
         >
 
+
+            <!-- =================================================
+                 MOBILE MENU HEADER
+            ================================================== -->
+
             <div class="mobile-menu-header">
 
                 <a
                     href="{{ url_for('home') }}"
                     class="mobile-menu-brand"
+                    aria-label="M1000 Home"
                 >
 
                     <img
-                        src="{{ url_for('static', filename='images/logo.png') }}"
+                        src="{{ url_for(
+                            'static',
+                            filename='images/logo.png'
+                        ) }}"
                         alt="M1000"
+                        width="42"
+                        height="42"
                     >
 
                     <span>
@@ -477,19 +563,34 @@
             </div>
 
 
+            <!-- =================================================
+                 MOBILE MENU CONTENT
+            ================================================== -->
+
             <div class="mobile-menu-inner">
+
+
+                <!-- BROWSE -->
 
                 <div class="mobile-menu-label">
                     BROWSE
                 </div>
 
 
+                <!-- HOME -->
+
                 <a
                     href="{{ url_for('home') }}"
-                    class="mobile-nav-link"
+                    class="mobile-nav-link {% if request.endpoint == 'home' %}active{% endif %}"
+                    {% if request.endpoint == 'home' %}
+                    aria-current="page"
+                    {% endif %}
                 >
 
-                    <span class="mobile-nav-icon">
+                    <span
+                        class="mobile-nav-icon"
+                        aria-hidden="true"
+                    >
                         ⌂
                     </span>
 
@@ -500,12 +601,20 @@
                 </a>
 
 
+                <!-- TAMIL HD MOVIES -->
+
                 <a
-                    href="{{ url_for('category', category_name='Tamil HD Movies') }}"
-                    class="mobile-nav-link"
+                    href="{{ url_for(
+                        'category',
+                        category_name='Tamil HD Movies'
+                    ) }}"
+                    class="mobile-nav-link {% if request.endpoint == 'category' and request.view_args and request.view_args.get('category_name') == 'Tamil HD Movies' %}active{% endif %}"
                 >
 
-                    <span class="mobile-nav-icon">
+                    <span
+                        class="mobile-nav-icon"
+                        aria-hidden="true"
+                    >
                         HD
                     </span>
 
@@ -516,44 +625,68 @@
                 </a>
 
 
+                <!-- TAMIL NEW MOVIES -->
+
                 <a
-                    href="{{ url_for('category', category_name='Tamil New Movies') }}"
-                    class="mobile-nav-link"
+                    href="{{ url_for(
+                        'category',
+                        category_name='Tamil New Movies'
+                    ) }}"
+                    class="mobile-nav-link {% if request.endpoint == 'category' and request.view_args and request.view_args.get('category_name') == 'Tamil New Movies' %}active{% endif %}"
                 >
 
-                    <span class="mobile-nav-icon">
+                    <span
+                        class="mobile-nav-icon"
+                        aria-hidden="true"
+                    >
                         NEW
                     </span>
 
                     <span>
-                        New Movies
+                        Tamil New Movies
                     </span>
 
                 </a>
 
 
+                <!-- TAMIL DUBBED MOVIES -->
+
                 <a
-                    href="{{ url_for('category', category_name='Tamil Dubbed Movies') }}"
-                    class="mobile-nav-link"
+                    href="{{ url_for(
+                        'category',
+                        category_name='Tamil Dubbed Movies'
+                    ) }}"
+                    class="mobile-nav-link {% if request.endpoint == 'category' and request.view_args and request.view_args.get('category_name') == 'Tamil Dubbed Movies' %}active{% endif %}"
                 >
 
-                    <span class="mobile-nav-icon">
+                    <span
+                        class="mobile-nav-icon"
+                        aria-hidden="true"
+                    >
                         DUB
                     </span>
 
                     <span>
-                        Dubbed Movies
+                        Tamil Dubbed Movies
                     </span>
 
                 </a>
 
 
+                <!-- WEB SERIES -->
+
                 <a
-                    href="{{ url_for('category', category_name='Web Series') }}"
-                    class="mobile-nav-link"
+                    href="{{ url_for(
+                        'category',
+                        category_name='Web Series'
+                    ) }}"
+                    class="mobile-nav-link {% if request.endpoint == 'category' and request.view_args and request.view_args.get('category_name') == 'Web Series' %}active{% endif %}"
                 >
 
-                    <span class="mobile-nav-icon">
+                    <span
+                        class="mobile-nav-icon"
+                        aria-hidden="true"
+                    >
                         ▶
                     </span>
 
@@ -564,12 +697,17 @@
                 </a>
 
 
+                <!-- ALL MOVIES -->
+
                 <a
                     href="{{ url_for('all_movies') }}"
-                    class="mobile-nav-link"
+                    class="mobile-nav-link {% if request.endpoint == 'all_movies' %}active{% endif %}"
                 >
 
-                    <span class="mobile-nav-icon">
+                    <span
+                        class="mobile-nav-icon"
+                        aria-hidden="true"
+                    >
                         +
                     </span>
 
@@ -580,8 +718,16 @@
                 </a>
 
 
+                <!-- =================================================
+                     DIVIDER
+                ================================================== -->
+
                 <div class="mobile-menu-divider"></div>
 
+
+                <!-- =================================================
+                     INFORMATION
+                ================================================== -->
 
                 <div class="mobile-menu-label">
                     INFORMATION
@@ -593,7 +739,10 @@
                     class="mobile-nav-link"
                 >
 
-                    <span class="mobile-nav-icon">
+                    <span
+                        class="mobile-nav-icon"
+                        aria-hidden="true"
+                    >
                         ℹ
                     </span>
 
@@ -606,10 +755,14 @@
             </div>
 
 
+            <!-- =================================================
+                 MOBILE MENU FOOTER
+            ================================================== -->
+
             <div class="mobile-menu-footer">
 
                 <span>
-                    © {{ current_year }} M1000
+                    © {{ current_year | default(2026) }} M1000
                 </span>
 
                 <span>
@@ -622,7 +775,7 @@
 
 
         <!-- =================================================
-             MENU OVERLAY
+             MOBILE MENU OVERLAY
         ================================================== -->
 
         <div
@@ -637,39 +790,18 @@
 
 
 <!-- =========================================================
-     GLOBAL TOP AD
-     300x250
-========================================================== -->
-
-<div class="ad-container site-top-ad">
-
-    <span class="ad-label">
-        Advertisement
-    </span>
-
-    <div class="ad-content">
-
-        <script>
-            atOptions = {
-                'key': '92635afe7ff3a68469d4dc59cbd6b0b6',
-                'format': 'iframe',
-                'height': 250,
-                'width': 300,
-                'params': {}
-            };
-        </script>
-
-        <script
-            src="https://www.highrevenueformat.com/92635afe7ff3a68469d4dc59cbd6b0b6/invoke.js">
-        </script>
-
-    </div>
-
-</div>
-
-
-<!-- =========================================================
      MAIN CONTENT
+     
+     IMPORTANT:
+     The top 300x250 advertisement is NOT placed here.
+     
+     home.html already contains its own:
+     - top ad
+     - after hero ad
+     - middle ad
+     - bottom ad
+     
+     This prevents duplicate advertisements on Home.
 ========================================================== -->
 
 <main
@@ -683,45 +815,18 @@
 
 
 <!-- =========================================================
-     FOOTER 300x250 AD
-========================================================== -->
-
-<div class="ad-container footer-ad">
-
-    <span class="ad-label">
-        Advertisement
-    </span>
-
-    <div class="ad-content">
-
-        <script>
-            atOptions = {
-                'key': '92635afe7ff3a68469d4dc59cbd6b0b6',
-                'format': 'iframe',
-                'height': 250,
-                'width': 300,
-                'params': {}
-            };
-        </script>
-
-        <script
-            src="https://www.highrevenueformat.com/92635afe7ff3a68469d4dc59cbd6b0b6/invoke.js">
-        </script>
-
-    </div>
-
-</div>
-
-
-<!-- =========================================================
      MOBILE 320x50 AD
 ========================================================== -->
 
-<div class="ad-container mobile-banner-ad">
+<div
+    class="ad-container mobile-banner-ad"
+    aria-label="Advertisement"
+>
 
     <span class="ad-label">
         Advertisement
     </span>
+
 
     <div class="ad-content">
 
@@ -734,6 +839,7 @@
                 'params': {}
             };
         </script>
+
 
         <script
             src="https://www.highrevenueformat.com/dbac2fbb1c68b75c745275fea665dccc/invoke.js">
@@ -750,19 +856,35 @@
 
 <footer class="site-footer">
 
+
+    <!-- =====================================================
+         FOOTER MAIN
+    ====================================================== -->
+
     <div class="footer-main">
 
+
+        <!-- =================================================
+             FOOTER BRAND
+        ================================================== -->
 
         <div class="footer-brand">
 
             <a
                 href="{{ url_for('home') }}"
                 class="footer-logo"
+                aria-label="M1000 Home"
             >
 
                 <img
-                    src="{{ url_for('static', filename='images/logo.png') }}"
+                    src="{{ url_for(
+                        'static',
+                        filename='images/logo.png'
+                    ) }}"
                     alt="M1000"
+                    width="42"
+                    height="42"
+                    loading="lazy"
                 >
 
                 <span>
@@ -790,36 +912,57 @@
             </h3>
 
 
-            <a href="{{ url_for('home') }}">
+            <a
+                href="{{ url_for('home') }}"
+            >
                 Home
             </a>
 
 
             <a
-                href="{{ url_for('category', category_name='Tamil HD Movies') }}"
+                href="{{ url_for(
+                    'category',
+                    category_name='Tamil HD Movies'
+                ) }}"
             >
                 Tamil HD
             </a>
 
 
             <a
-                href="{{ url_for('category', category_name='Tamil New Movies') }}"
+                href="{{ url_for(
+                    'category',
+                    category_name='Tamil New Movies'
+                ) }}"
             >
                 New Movies
             </a>
 
 
             <a
-                href="{{ url_for('category', category_name='Tamil Dubbed Movies') }}"
+                href="{{ url_for(
+                    'category',
+                    category_name='Tamil Dubbed Movies'
+                ) }}"
             >
                 Dubbed
             </a>
 
 
             <a
-                href="{{ url_for('category', category_name='Web Series') }}"
+                href="{{ url_for(
+                    'category',
+                    category_name='Web Series'
+                ) }}"
             >
                 Web Series
+            </a>
+
+
+            <a
+                href="{{ url_for('all_movies') }}"
+            >
+                All Movies
             </a>
 
         </div>
@@ -836,17 +979,23 @@
             </h3>
 
 
-            <a href="{{ url_for('all_movies') }}">
+            <a
+                href="{{ url_for('all_movies') }}"
+            >
                 All Movies
             </a>
 
 
-            <a href="{{ url_for('home') }}#latest">
+            <a
+                href="{{ url_for('home') }}#latest"
+            >
                 Latest Releases
             </a>
 
 
-            <a href="{{ url_for('home') }}#popular">
+            <a
+                href="{{ url_for('home') }}#popular"
+            >
                 Popular
             </a>
 
@@ -855,16 +1004,16 @@
     </div>
 
 
-    <!-- =================================================
+    <!-- =====================================================
          FOOTER BOTTOM
-    ================================================== -->
+    ====================================================== -->
 
     <div class="footer-bottom">
 
         <p>
             ©
             <span data-current-year>
-                {{ current_year }}
+                {{ current_year | default(2026) }}
             </span>
             M1000. All rights reserved.
         </p>
@@ -888,6 +1037,10 @@
     defer
 ></script>
 
+
+<!-- =========================================================
+     PAGE SPECIFIC SCRIPTS
+========================================================== -->
 
 {% block scripts %}{% endblock %}
 

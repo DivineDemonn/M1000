@@ -1,32 +1,28 @@
 {# =========================================================
-M1000 — PREMIUM MOVIE DETAILS PAGE
-File: templates/movie.html
+   M1000 — PREMIUM MOVIE DETAILS PAGE
+   File: templates/movie.html
 
-Theme:
-Black + Gold / Yellow Cinematic
+   Compatible with:
+   - app.py
+   - movies.json
+   - base.html
+   - style.css
 
-Works with:
-- app.py
-- movies.json
-- base.html
-- style.css
+   Supports:
+   - Poster
+   - Backdrop
+   - Screenshots
+   - Genres
+   - Movie information
+   - Download options
+   - Related movies
+   - Watch URL
+   - 320x50 Adsterra
 
-Supports:
-- Poster
-- Backdrop
-- Screenshots
-- Genres
-- Movie information
-- Download options
-- Related movies
-- Watch URL
-- 320x50 Adsterra
-
-IMPORTANT:
-base.html already contains the global <main>.
-Therefore this file must NOT create another <main>.
+   IMPORTANT:
+   base.html already contains the global <main>.
+   Therefore this file does NOT create another <main>.
 ========================================================= #}
-
 
 {% extends "base.html" %}
 
@@ -36,15 +32,12 @@ Therefore this file must NOT create another <main>.
 ========================================================= #}
 
 {% block title %}
-
 {{ movie.title | default('Movie') }} — M1000
-
 {% endblock %}
 
 
-
 {# =========================================================
-   PAGE-SPECIFIC HEAD
+   PAGE HEAD
 ========================================================= #}
 
 {% block head %}
@@ -57,7 +50,6 @@ Therefore this file must NOT create another <main>.
 {% endblock %}
 
 
-
 {# =========================================================
    MAIN CONTENT
 ========================================================= #}
@@ -66,13 +58,8 @@ Therefore this file must NOT create another <main>.
 
 <div class="movie-page">
 
-
     {# =====================================================
-       TOP 320x50 AD
-
-       NOTE:
-       base.html also contains global ads.
-       This ad belongs specifically to the movie page.
+       TOP ADVERTISEMENT
     ====================================================== #}
 
     <section
@@ -84,20 +71,15 @@ Therefore this file must NOT create another <main>.
             Advertisement
         </span>
 
-
         <div class="ad-content">
-
-            <!-- =============================================
-                 ADSTERRA 320x50
-            ============================================== -->
 
             <script>
                 atOptions = {
-                    'key' : 'dbac2fbb1c68b75c745275fea665dccc',
-                    'format' : 'iframe',
-                    'height' : 50,
-                    'width' : 320,
-                    'params' : {}
+                    'key': 'dbac2fbb1c68b75c745275fea665dccc',
+                    'format': 'iframe',
+                    'height': 50,
+                    'width': 320,
+                    'params': {}
                 };
             </script>
 
@@ -110,9 +92,8 @@ Therefore this file must NOT create another <main>.
     </section>
 
 
-
     {# =====================================================
-       MOVIE HERO / BACKDROP
+       MOVIE DETAIL
     ====================================================== #}
 
     <section class="movie-detail">
@@ -143,7 +124,6 @@ Therefore this file must NOT create another <main>.
             </div>
 
             {% endif %}
-
 
 
             {# =================================================
@@ -194,7 +174,6 @@ Therefore this file must NOT create another <main>.
                 </div>
 
 
-
                 {# =================================================
                    MOVIE INFORMATION
                 ================================================== #}
@@ -224,8 +203,13 @@ Therefore this file must NOT create another <main>.
                         SERIES
                     </span>
 
-                    {% endif %}
+                    {% else %}
 
+                    <span class="hero-badge">
+                        M1000
+                    </span>
+
+                    {% endif %}
 
 
                     {# =================================================
@@ -233,19 +217,15 @@ Therefore this file must NOT create another <main>.
                     ================================================== #}
 
                     <h1 class="movie-detail-title">
-
                         {{ movie.title | default('Untitled Movie') }}
-
                     </h1>
 
 
-
                     {# =================================================
-                       META INFORMATION
+                       META
                     ================================================== #}
 
                     <div class="movie-detail-meta">
-
 
                         {% if movie.year %}
 
@@ -254,7 +234,6 @@ Therefore this file must NOT create another <main>.
                         </span>
 
                         {% endif %}
-
 
 
                         {% if movie.rating %}
@@ -266,7 +245,6 @@ Therefore this file must NOT create another <main>.
                         {% endif %}
 
 
-
                         {% if movie.language %}
 
                         <span>
@@ -274,7 +252,6 @@ Therefore this file must NOT create another <main>.
                         </span>
 
                         {% endif %}
-
 
 
                         {% if movie.quality %}
@@ -286,7 +263,6 @@ Therefore this file must NOT create another <main>.
                         {% endif %}
 
 
-
                         {% if movie.duration %}
 
                         <span>
@@ -294,7 +270,6 @@ Therefore this file must NOT create another <main>.
                         </span>
 
                         {% endif %}
-
 
 
                         {% if movie.certificate %}
@@ -306,7 +281,6 @@ Therefore this file must NOT create another <main>.
                         {% endif %}
 
                     </div>
-
 
 
                     {# =================================================
@@ -336,7 +310,6 @@ Therefore this file must NOT create another <main>.
                     {% endif %}
 
 
-
                     {# =================================================
                        GENRES
                     ================================================== #}
@@ -345,7 +318,8 @@ Therefore this file must NOT create another <main>.
 
                     <div class="movie-genres">
 
-                        {% if movie.genre is iterable and movie.genre is not string %}
+                        {% if movie.genre is iterable
+                              and movie.genre is not string %}
 
                             {% for genre in movie.genre %}
 
@@ -368,7 +342,6 @@ Therefore this file must NOT create another <main>.
                     {% endif %}
 
 
-
                     {# =================================================
                        DESCRIPTION
                     ================================================== #}
@@ -376,22 +349,17 @@ Therefore this file must NOT create another <main>.
                     {% if movie.description %}
 
                     <p class="movie-detail-description">
-
                         {{ movie.description }}
-
                     </p>
 
                     {% else %}
 
                     <p class="movie-detail-description">
-
                         Discover {{ movie.title | default('this movie') }}
                         on M1000.
-
                     </p>
 
                     {% endif %}
-
 
 
                     {# =================================================
@@ -399,7 +367,6 @@ Therefore this file must NOT create another <main>.
                     ================================================== #}
 
                     <div class="hero-buttons">
-
 
                         {% if movie.watch_url %}
 
@@ -409,17 +376,11 @@ Therefore this file must NOT create another <main>.
                             target="_blank"
                             rel="noopener noreferrer"
                         >
-
-                            <span aria-hidden="true">
-                                ▶
-                            </span>
-
+                            <span aria-hidden="true">▶</span>
                             Watch Now
-
                         </a>
 
                         {% endif %}
-
 
 
                         {% if movie.downloads %}
@@ -428,13 +389,8 @@ Therefore this file must NOT create another <main>.
                             href="#download"
                             class="btn btn-secondary"
                         >
-
-                            <span aria-hidden="true">
-                                ↓
-                            </span>
-
+                            <span aria-hidden="true">↓</span>
                             Download
-
                         </a>
 
                         {% endif %}
@@ -446,9 +402,8 @@ Therefore this file must NOT create another <main>.
             </div>
 
 
-
             {# =====================================================
-               AD — BEFORE DOWNLOAD
+               AD BEFORE DOWNLOAD
             ====================================================== #}
 
             <section
@@ -460,20 +415,15 @@ Therefore this file must NOT create another <main>.
                     Advertisement
                 </span>
 
-
                 <div class="ad-content">
-
-                    <!-- =============================================
-                         ADSTERRA 320x50
-                    ============================================== -->
 
                     <script>
                         atOptions = {
-                            'key' : 'dbac2fbb1c68b75c745275fea665dccc',
-                            'format' : 'iframe',
-                            'height' : 50,
-                            'width' : 320,
-                            'params' : {}
+                            'key': 'dbac2fbb1c68b75c745275fea665dccc',
+                            'format': 'iframe',
+                            'height': 50,
+                            'width': 320,
+                            'params': {}
                         };
                     </script>
 
@@ -484,7 +434,6 @@ Therefore this file must NOT create another <main>.
                 </div>
 
             </section>
-
 
 
             {# =====================================================
@@ -509,43 +458,24 @@ Therefore this file must NOT create another <main>.
 
                 <div class="download-grid">
 
-
                     {% for download in movie.downloads %}
 
                     <div class="download-item">
 
 
-                        {# =========================================
-                           QUALITY
-                        ========================================== #}
-
                         <div class="download-quality">
-
                             {{ download.quality | default('Quality') }}
-
                         </div>
 
-
-
-                        {# =========================================
-                           FILE SIZE
-                        ========================================== #}
 
                         {% if download.size %}
 
                         <div class="download-size">
-
                             {{ download.size }}
-
                         </div>
 
                         {% endif %}
 
-
-
-                        {# =========================================
-                           DOWNLOAD BUTTON
-                        ========================================== #}
 
                         {% if download.url
                               and download.url != "#"
@@ -557,15 +487,9 @@ Therefore this file must NOT create another <main>.
                             class="btn btn-download"
                             target="_blank"
                             rel="noopener noreferrer"
-                            download
                         >
-
-                            <span aria-hidden="true">
-                                ↓
-                            </span>
-
+                            <span aria-hidden="true">↓</span>
                             Download
-
                         </a>
 
                         {% else %}
@@ -574,9 +498,7 @@ Therefore this file must NOT create another <main>.
                             class="btn btn-download disabled"
                             aria-disabled="true"
                         >
-
                             Link Unavailable
-
                         </span>
 
                         {% endif %}
@@ -587,13 +509,7 @@ Therefore this file must NOT create another <main>.
 
                 </div>
 
-
                 {% else %}
-
-
-                {# =============================================
-                   NO DOWNLOADS
-                ============================================== #}
 
                 <div class="empty-state">
 
@@ -616,9 +532,8 @@ Therefore this file must NOT create another <main>.
             </section>
 
 
-
             {# =====================================================
-               AD — AFTER DOWNLOAD
+               AD AFTER DOWNLOAD
             ====================================================== #}
 
             <section
@@ -630,20 +545,15 @@ Therefore this file must NOT create another <main>.
                     Advertisement
                 </span>
 
-
                 <div class="ad-content">
-
-                    <!-- =============================================
-                         ADSTERRA 320x50
-                    ============================================== -->
 
                     <script>
                         atOptions = {
-                            'key' : 'dbac2fbb1c68b75c745275fea665dccc',
-                            'format' : 'iframe',
-                            'height' : 50,
-                            'width' : 320,
-                            'params' : {}
+                            'key': 'dbac2fbb1c68b75c745275fea665dccc',
+                            'format': 'iframe',
+                            'height': 50,
+                            'width': 320,
+                            'params': {}
                         };
                     </script>
 
@@ -654,7 +564,6 @@ Therefore this file must NOT create another <main>.
                 </div>
 
             </section>
-
 
 
             {# =====================================================
@@ -681,7 +590,6 @@ Therefore this file must NOT create another <main>.
 
 
                 <div class="screenshots-grid">
-
 
                     {% for screenshot in movie.screenshots %}
 
@@ -716,14 +624,11 @@ Therefore this file must NOT create another <main>.
             {% endif %}
 
 
-
             {# =====================================================
                MOVIE INFORMATION
             ====================================================== #}
 
-            <section
-                class="section movie-information-section"
-            >
+            <section class="section movie-information-section">
 
                 <div class="section-header">
 
@@ -736,10 +641,6 @@ Therefore this file must NOT create another <main>.
 
                 <div class="download-grid">
 
-
-                    {# =============================================
-                       TITLE
-                    ============================================== #}
 
                     {% if movie.title %}
 
@@ -758,11 +659,6 @@ Therefore this file must NOT create another <main>.
                     {% endif %}
 
 
-
-                    {# =============================================
-                       ORIGINAL TITLE
-                    ============================================== #}
-
                     {% if movie.original_title %}
 
                     <div class="download-item">
@@ -779,11 +675,6 @@ Therefore this file must NOT create another <main>.
 
                     {% endif %}
 
-
-
-                    {# =============================================
-                       YEAR
-                    ============================================== #}
 
                     {% if movie.year %}
 
@@ -802,11 +693,6 @@ Therefore this file must NOT create another <main>.
                     {% endif %}
 
 
-
-                    {# =============================================
-                       TYPE
-                    ============================================== #}
-
                     {% if movie.type %}
 
                     <div class="download-item">
@@ -823,11 +709,6 @@ Therefore this file must NOT create another <main>.
 
                     {% endif %}
 
-
-
-                    {# =============================================
-                       LANGUAGE
-                    ============================================== #}
 
                     {% if movie.language %}
 
@@ -846,11 +727,6 @@ Therefore this file must NOT create another <main>.
                     {% endif %}
 
 
-
-                    {# =============================================
-                       CATEGORY
-                    ============================================== #}
-
                     {% if movie.category %}
 
                     <div class="download-item">
@@ -868,11 +744,6 @@ Therefore this file must NOT create another <main>.
                     {% endif %}
 
 
-
-                    {# =============================================
-                       GENRE
-                    ============================================== #}
-
                     {% if movie.genre %}
 
                     <div class="download-item">
@@ -884,8 +755,7 @@ Therefore this file must NOT create another <main>.
                         <span class="download-size">
 
                             {% if movie.genre is iterable
-                                  and movie.genre is not string
-                            %}
+                                  and movie.genre is not string %}
 
                                 {{ movie.genre | join(', ') }}
 
@@ -901,11 +771,6 @@ Therefore this file must NOT create another <main>.
 
                     {% endif %}
 
-
-
-                    {# =============================================
-                       DURATION
-                    ============================================== #}
 
                     {% if movie.duration %}
 
@@ -924,11 +789,6 @@ Therefore this file must NOT create another <main>.
                     {% endif %}
 
 
-
-                    {# =============================================
-                       CERTIFICATE
-                    ============================================== #}
-
                     {% if movie.certificate %}
 
                     <div class="download-item">
@@ -946,11 +806,6 @@ Therefore this file must NOT create another <main>.
                     {% endif %}
 
 
-
-                    {# =============================================
-                       RATING
-                    ============================================== #}
-
                     {% if movie.rating %}
 
                     <div class="download-item">
@@ -967,11 +822,6 @@ Therefore this file must NOT create another <main>.
 
                     {% endif %}
 
-
-
-                    {# =============================================
-                       FEATURED
-                    ============================================== #}
 
                     {% if movie.featured is defined %}
 
@@ -995,10 +845,10 @@ Therefore this file must NOT create another <main>.
 
                     {% endif %}
 
+
                 </div>
 
             </section>
-
 
 
             {# =====================================================
@@ -1007,9 +857,7 @@ Therefore this file must NOT create another <main>.
 
             {% if similar_movies %}
 
-            <section
-                class="section related-movies-section"
-            >
+            <section class="section related-movies-section">
 
                 <div class="section-header">
 
@@ -1029,18 +877,12 @@ Therefore this file must NOT create another <main>.
 
                 <div class="movie-grid">
 
-
                     {% for related in similar_movies %}
 
                     <article class="movie-card">
 
-
                         <div class="movie-poster">
 
-
-                            {# =====================================
-                               RELATED BADGE
-                            ====================================== #}
 
                             {% if related.badge %}
 
@@ -1057,11 +899,6 @@ Therefore this file must NOT create another <main>.
                             {% endif %}
 
 
-
-                            {# =====================================
-                               RELATED QUALITY
-                            ====================================== #}
-
                             {% if related.quality %}
 
                             <span class="quality-badge">
@@ -1070,11 +907,6 @@ Therefore this file must NOT create another <main>.
 
                             {% endif %}
 
-
-
-                            {# =====================================
-                               RELATED POSTER
-                            ====================================== #}
 
                             {% if related.poster %}
 
@@ -1089,22 +921,15 @@ Therefore this file must NOT create another <main>.
                             {% else %}
 
                             <div class="movie-poster-placeholder">
-
-                                <span>
-                                    🎬
-                                </span>
-
+                                🎬
                             </div>
 
                             {% endif %}
 
 
-
-                            {# =====================================
-                               OVERLAY
-                            ====================================== #}
-
                             <div class="poster-overlay">
+
+                                {% if related.id %}
 
                                 <a
                                     href="{{ url_for(
@@ -1112,22 +937,21 @@ Therefore this file must NOT create another <main>.
                                         movie_id=related.id
                                     ) }}"
                                     class="poster-play"
-                                    aria-label="View {{ related.title }}"
+                                    aria-label="View {{ related.title | default('Movie') }}"
                                 >
                                     ▶
                                 </a>
+
+                                {% endif %}
 
                             </div>
 
                         </div>
 
 
-
-                        {# =========================================
-                           RELATED INFORMATION
-                        ========================================== #}
-
                         <div class="movie-info">
+
+                            {% if related.id %}
 
                             <a
                                 href="{{ url_for(
@@ -1136,14 +960,19 @@ Therefore this file must NOT create another <main>.
                                 ) }}"
                                 class="movie-title"
                             >
-
                                 {{ related.title | default('Untitled') }}
-
                             </a>
+
+                            {% else %}
+
+                            <span class="movie-title">
+                                {{ related.title | default('Untitled') }}
+                            </span>
+
+                            {% endif %}
 
 
                             <div class="movie-meta">
-
 
                                 {% if related.year %}
 
@@ -1154,17 +983,14 @@ Therefore this file must NOT create another <main>.
                                 {% endif %}
 
 
-
                                 {% if related.year
-                                      and related.rating
-                                %}
+                                      and related.rating %}
 
                                 <span>
                                     •
                                 </span>
 
                                 {% endif %}
-
 
 
                                 {% if related.rating %}
@@ -1177,6 +1003,8 @@ Therefore this file must NOT create another <main>.
 
                             </div>
 
+
+                            {% if related.id %}
 
                             <div class="movie-card-download">
 
@@ -1192,6 +1020,8 @@ Therefore this file must NOT create another <main>.
 
                             </div>
 
+                            {% endif %}
+
                         </div>
 
                     </article>
@@ -1205,9 +1035,8 @@ Therefore this file must NOT create another <main>.
             {% endif %}
 
 
-
             {# =====================================================
-               FINAL MOVIE PAGE AD
+               FINAL AD
             ====================================================== #}
 
             <section
@@ -1219,20 +1048,15 @@ Therefore this file must NOT create another <main>.
                     Advertisement
                 </span>
 
-
                 <div class="ad-content">
-
-                    <!-- =============================================
-                         ADSTERRA 320x50
-                    ============================================== -->
 
                     <script>
                         atOptions = {
-                            'key' : 'dbac2fbb1c68b75c745275fea665dccc',
-                            'format' : 'iframe',
-                            'height' : 50,
-                            'width' : 320,
-                            'params' : {}
+                            'key': 'dbac2fbb1c68b75c745275fea665dccc',
+                            'format': 'iframe',
+                            'height': 50,
+                            'width': 320,
+                            'params': {}
                         };
                     </script>
 

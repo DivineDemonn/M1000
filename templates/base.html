@@ -44,10 +44,7 @@
     <link
         rel="icon"
         type="image/png"
-        href="{{ url_for(
-            'static',
-            filename='images/logo.png'
-        ) }}"
+        href="{{ url_for('static', filename='images/logo.png') }}"
     >
 
 
@@ -78,28 +75,15 @@
 
     <link
         rel="stylesheet"
-        href="{{ url_for(
-            'static',
-            filename='css/style.css'
-        ) }}"
+        href="{{ url_for('static', filename='css/style.css') }}"
     >
 
 
     <!-- =====================================================
-         PAGE-SPECIFIC HEAD
+         PAGE SPECIFIC HEAD
     ====================================================== -->
 
     {% block head %}{% endblock %}
-
-
-    <!-- =====================================================
-         ADSTERRA
-         HEAD-BASED CODE
-         
-         No Adsterra head code was supplied.
-         Keep this section available for future use.
-    ====================================================== -->
-
 
 </head>
 
@@ -109,9 +93,7 @@
 
 <!-- =========================================================
      ADSTERRA — POPUNDER
-     
-     GLOBAL SCRIPT
-     Supplied Adsterra code
+     GLOBAL
 ========================================================== -->
 
 <script
@@ -121,9 +103,7 @@
 
 <!-- =========================================================
      ADSTERRA — SOCIAL BAR
-     
-     GLOBAL SCRIPT
-     Supplied Adsterra code
+     GLOBAL
 ========================================================== -->
 
 <script
@@ -144,10 +124,7 @@
     <div class="loader-logo">
 
         <img
-            src="{{ url_for(
-                'static',
-                filename='images/logo.png'
-            ) }}"
+            src="{{ url_for('static', filename='images/logo.png') }}"
             alt=""
         >
 
@@ -188,10 +165,7 @@
                 <span class="brand-logo-wrap">
 
                     <img
-                        src="{{ url_for(
-                            'static',
-                            filename='images/logo.png'
-                        ) }}"
+                        src="{{ url_for('static', filename='images/logo.png') }}"
                         alt="M1000"
                         class="brand-logo"
                         width="40"
@@ -223,41 +197,33 @@
                     Home
                 </a>
 
+
                 <a
-                    href="{{ url_for(
-                        'category',
-                        category_name='Tamil HD Movies'
-                    ) }}"
+                    href="{{ url_for('category', category_name='Tamil HD Movies') }}"
                     class="nav-link"
                 >
                     Tamil HD
                 </a>
 
+
                 <a
-                    href="{{ url_for(
-                        'category',
-                        category_name='Tamil New Movies'
-                    ) }}"
+                    href="{{ url_for('category', category_name='Tamil New Movies') }}"
                     class="nav-link"
                 >
                     New Movies
                 </a>
 
+
                 <a
-                    href="{{ url_for(
-                        'category',
-                        category_name='Tamil Dubbed Movies'
-                    ) }}"
+                    href="{{ url_for('category', category_name='Tamil Dubbed Movies') }}"
                     class="nav-link"
                 >
                     Dubbed
                 </a>
 
+
                 <a
-                    href="{{ url_for(
-                        'category',
-                        category_name='Web Series'
-                    ) }}"
+                    href="{{ url_for('category', category_name='Web Series') }}"
                     class="nav-link"
                 >
                     Web Series
@@ -314,6 +280,7 @@
 
                     </span>
 
+
                     <input
                         type="search"
                         name="q"
@@ -322,6 +289,7 @@
                         maxlength="100"
                         aria-label="Search movies"
                     >
+
 
                     <button
                         type="submit"
@@ -333,7 +301,9 @@
                 </form>
 
 
-                <!-- MOBILE SEARCH -->
+                <!-- =================================================
+                     MOBILE SEARCH BUTTON
+                ================================================== -->
 
                 <button
                     type="button"
@@ -373,7 +343,9 @@
                 </button>
 
 
-                <!-- MOBILE MENU -->
+                <!-- =================================================
+                     MOBILE MENU BUTTON
+                ================================================== -->
 
                 <button
                     type="button"
@@ -439,6 +411,7 @@
 
                     </svg>
 
+
                     <input
                         type="search"
                         name="q"
@@ -449,6 +422,7 @@
                     >
 
                 </div>
+
 
                 <button
                     type="submit"
@@ -480,10 +454,7 @@
                 >
 
                     <img
-                        src="{{ url_for(
-                            'static',
-                            filename='images/logo.png'
-                        ) }}"
+                        src="{{ url_for('static', filename='images/logo.png') }}"
                         alt="M1000"
                     >
 
@@ -492,6 +463,7 @@
                     </span>
 
                 </a>
+
 
                 <button
                     type="button"
@@ -516,56 +488,79 @@
                     href="{{ url_for('home') }}"
                     class="mobile-nav-link"
                 >
-                    <span class="mobile-nav-icon">⌂</span>
-                    <span>Home</span>
+
+                    <span class="mobile-nav-icon">
+                        ⌂
+                    </span>
+
+                    <span>
+                        Home
+                    </span>
+
                 </a>
 
 
                 <a
-                    href="{{ url_for(
-                        'category',
-                        category_name='Tamil HD Movies'
-                    ) }}"
+                    href="{{ url_for('category', category_name='Tamil HD Movies') }}"
                     class="mobile-nav-link"
                 >
-                    <span class="mobile-nav-icon">HD</span>
-                    <span>Tamil HD Movies</span>
+
+                    <span class="mobile-nav-icon">
+                        HD
+                    </span>
+
+                    <span>
+                        Tamil HD Movies
+                    </span>
+
                 </a>
 
 
                 <a
-                    href="{{ url_for(
-                        'category',
-                        category_name='Tamil New Movies'
-                    ) }}"
+                    href="{{ url_for('category', category_name='Tamil New Movies') }}"
                     class="mobile-nav-link"
                 >
-                    <span class="mobile-nav-icon">NEW</span>
-                    <span>New Movies</span>
+
+                    <span class="mobile-nav-icon">
+                        NEW
+                    </span>
+
+                    <span>
+                        New Movies
+                    </span>
+
                 </a>
 
 
                 <a
-                    href="{{ url_for(
-                        'category',
-                        category_name='Tamil Dubbed Movies'
-                    ) }}"
+                    href="{{ url_for('category', category_name='Tamil Dubbed Movies') }}"
                     class="mobile-nav-link"
                 >
-                    <span class="mobile-nav-icon">DUB</span>
-                    <span>Dubbed Movies</span>
+
+                    <span class="mobile-nav-icon">
+                        DUB
+                    </span>
+
+                    <span>
+                        Dubbed Movies
+                    </span>
+
                 </a>
 
 
                 <a
-                    href="{{ url_for(
-                        'category',
-                        category_name='Web Series'
-                    ) }}"
+                    href="{{ url_for('category', category_name='Web Series') }}"
                     class="mobile-nav-link"
                 >
-                    <span class="mobile-nav-icon">▶</span>
-                    <span>Web Series</span>
+
+                    <span class="mobile-nav-icon">
+                        ▶
+                    </span>
+
+                    <span>
+                        Web Series
+                    </span>
+
                 </a>
 
 
@@ -573,8 +568,15 @@
                     href="{{ url_for('all_movies') }}"
                     class="mobile-nav-link"
                 >
-                    <span class="mobile-nav-icon">+</span>
-                    <span>All Movies</span>
+
+                    <span class="mobile-nav-icon">
+                        +
+                    </span>
+
+                    <span>
+                        All Movies
+                    </span>
+
                 </a>
 
 
@@ -587,11 +589,18 @@
 
 
                 <a
-                    href="#"
+                    href="{{ url_for('home') }}"
                     class="mobile-nav-link"
                 >
-                    <span class="mobile-nav-icon">ℹ</span>
-                    <span>About M1000</span>
+
+                    <span class="mobile-nav-icon">
+                        ℹ
+                    </span>
+
+                    <span>
+                        About M1000
+                    </span>
+
                 </a>
 
             </div>
@@ -612,7 +621,9 @@
         </aside>
 
 
-        <!-- MENU OVERLAY -->
+        <!-- =================================================
+             MENU OVERLAY
+        ================================================== -->
 
         <div
             class="menu-overlay"
@@ -626,17 +637,8 @@
 
 
 <!-- =========================================================
-     AD 1 — SOCIAL BAR
-     
-     Already installed globally above <header>.
-     Do NOT add the Social Bar script again here.
-========================================================== -->
-
-
-<!-- =========================================================
-     TOP ADVERTISEMENT
-     
-     ADSTERRA — NATIVE BANNER
+     GLOBAL TOP AD
+     300x250
 ========================================================== -->
 
 <div class="ad-container site-top-ad">
@@ -647,15 +649,19 @@
 
     <div class="ad-content">
 
-        <script
-            async="async"
-            data-cfasync="false"
-            src="https://pl27506001.profitableratecpmnetwork.com/3b4631ebd3f3fc2e66b1f018eb408f9a/invoke.js">
+        <script>
+            atOptions = {
+                'key': '92635afe7ff3a68469d4dc59cbd6b0b6',
+                'format': 'iframe',
+                'height': 250,
+                'width': 300,
+                'params': {}
+            };
         </script>
 
-        <div
-            id="container-3b4631ebd3f3fc2e66b1f018eb408f9a">
-        </div>
+        <script
+            src="https://www.highrevenueformat.com/92635afe7ff3a68469d4dc59cbd6b0b6/invoke.js">
+        </script>
 
     </div>
 
@@ -677,9 +683,7 @@
 
 
 <!-- =========================================================
-     FOOTER AD
-     
-     ADSTERRA — 300x250
+     FOOTER 300x250 AD
 ========================================================== -->
 
 <div class="ad-container footer-ad">
@@ -711,11 +715,6 @@
 
 <!-- =========================================================
      MOBILE 320x50 AD
-     
-     ADSTERRA — 320x50
-     
-     CSS can hide this on desktop if your stylesheet
-     contains .mobile-banner-ad rules.
 ========================================================== -->
 
 <div class="ad-container mobile-banner-ad">
@@ -746,27 +745,6 @@
 
 
 <!-- =========================================================
-     SMARTLINK
-     
-     Smartlink is NOT a normal banner.
-     
-     Use this only where you intentionally want a
-     clickable promotional/continue button.
-========================================================== -->
-
-<!--
-<a
-    href="https://www.profitableratecpmnetwork.com/svg81n2i?key=28f3e0ce89db35fd5408f4bf9597a8f8"
-    target="_blank"
-    rel="noopener noreferrer"
-    class="smartlink-button"
->
-    Continue Watching
-</a>
--->
-
-
-<!-- =========================================================
      FOOTER
 ========================================================== -->
 
@@ -783,10 +761,7 @@
             >
 
                 <img
-                    src="{{ url_for(
-                        'static',
-                        filename='images/logo.png'
-                    ) }}"
+                    src="{{ url_for('static', filename='images/logo.png') }}"
                     alt="M1000"
                 >
 
@@ -796,6 +771,7 @@
 
             </a>
 
+
             <p>
                 Movies. Series. Endless entertainment.
             </p>
@@ -803,39 +779,45 @@
         </div>
 
 
+        <!-- =================================================
+             FOOTER BROWSE
+        ================================================== -->
+
         <div class="footer-column">
 
             <h3>
                 Browse
             </h3>
 
+
             <a href="{{ url_for('home') }}">
                 Home
             </a>
 
+
             <a
-                href="{{ url_for(
-                    'category',
-                    category_name='Tamil HD Movies'
-                ) }}"
+                href="{{ url_for('category', category_name='Tamil HD Movies') }}"
             >
                 Tamil HD
             </a>
 
+
             <a
-                href="{{ url_for(
-                    'category',
-                    category_name='Tamil New Movies'
-                ) }}"
+                href="{{ url_for('category', category_name='Tamil New Movies') }}"
             >
                 New Movies
             </a>
 
+
             <a
-                href="{{ url_for(
-                    'category',
-                    category_name='Web Series'
-                ) }}"
+                href="{{ url_for('category', category_name='Tamil Dubbed Movies') }}"
+            >
+                Dubbed
+            </a>
+
+
+            <a
+                href="{{ url_for('category', category_name='Web Series') }}"
             >
                 Web Series
             </a>
@@ -843,21 +825,28 @@
         </div>
 
 
+        <!-- =================================================
+             FOOTER M1000
+        ================================================== -->
+
         <div class="footer-column">
 
             <h3>
                 M1000
             </h3>
 
+
             <a href="{{ url_for('all_movies') }}">
                 All Movies
             </a>
 
-            <a href="{{ url_for('home') }}">
+
+            <a href="{{ url_for('home') }}#latest">
                 Latest Releases
             </a>
 
-            <a href="{{ url_for('home') }}">
+
+            <a href="{{ url_for('home') }}#popular">
                 Popular
             </a>
 
@@ -865,6 +854,10 @@
 
     </div>
 
+
+    <!-- =================================================
+         FOOTER BOTTOM
+    ================================================== -->
 
     <div class="footer-bottom">
 
@@ -875,6 +868,7 @@
             </span>
             M1000. All rights reserved.
         </p>
+
 
         <p>
             Built for cinematic experiences.
@@ -890,10 +884,7 @@
 ========================================================== -->
 
 <script
-    src="{{ url_for(
-        'static',
-        filename='js/app.js'
-    ) }}"
+    src="{{ url_for('static', filename='js/app.js') }}"
     defer
 ></script>
 

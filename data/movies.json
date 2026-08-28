@@ -1,55 +1,59 @@
 {
-  "id": "movie-001",
-  "title": "Toxic",
-  "original_title": "Toxic",
-  "year": 2026,
-  "type": "movie",
-
-  "category": "Tamil New Movies",
-  "language": "Tamil",
-
-  "genre": [
-    "Action",
-    "Gangster",
-    "Thriller"
-  ],
-
-  "rating": "8.2",
-  "duration": "3h 18m",
-  "certificate": "UA",
-
-  "poster": "https://graph.org/file/2a08c572fabb88fe267ed-fde6dbd22adacc9f0e.jpg",
-
-  "backdrop": "https://graph.org/file/d424ff794e1b4e5f942eb-980be59f0e7a298819.jpg",
-
-  "description": "A dark and brutal gangster saga set in Goa, where power, loyalty and betrayal collide. Yash leads a dangerous world of violence, ambition and redemption.",
-
-  "featured": true,
-  "trending": true,
-  "latest": true,
-
-  "screenshots": [
-    "https://graph.org/file/c64ceabae703aafb41f6a-eea6456a16208040d2.jpg",
-    "https://graph.org/file/15fce59fc340a0136f643-dd7b450355e4e8d437.jpg",
-    "https://graph.org/file/baddcc7f122a91bf77555-3ac00fb19464b7f52f.jpg",
-    "https://graph.org/file/e334563181170d0416802-1e467d2465d2613b34.jpg"
-  ],
-
-  "downloads": [
+  "movies": [
     {
-      "quality": "480p",
-      "size": "450 MB",
-      "url": "#"
-    },
-    {
-      "quality": "720p",
-      "size": "850 MB",
-      "url": "#"
-    },
-    {
-      "quality": "1080p",
-      "size": "1.8 GB",
-      "url": "#"
+      "id": "movie-001",
+      "title": "Toxic",
+      "original_title": "Toxic",
+      "year": 2026,
+      "type": "movie",
+
+      "category": "Tamil New Movies",
+      "language": "Tamil",
+
+      "genre": [
+        "Action",
+        "Gangster",
+        "Thriller"
+      ],
+
+      "rating": "8.2",
+      "duration": "3h 18m",
+      "certificate": "UA",
+
+      "poster": "https://graph.org/file/2a08c572fabb88fe267ed-fde6dbd22adacc9f0e.jpg",
+
+      "backdrop": "https://graph.org/file/d424ff794e1b4e5f942eb-980be59f0e7a298819.jpg",
+
+      "description": "A dark and brutal gangster saga set in Goa, where power, loyalty and betrayal collide. Yash leads a dangerous world of violence, ambition and redemption.",
+
+      "featured": true,
+      "trending": true,
+      "latest": true,
+
+      "screenshots": [
+        "https://graph.org/file/c64ceabae703aafb41f6a-eea6456a16208040d2.jpg",
+        "https://graph.org/file/15fce59fc340a0136f643-dd7b450355e4e8d437.jpg",
+        "https://graph.org/file/baddcc7f122a91bf77555-3ac00fb19464b7f52f.jpg",
+        "https://graph.org/file/e334563181170d0416802-1e467d2465d2613b34.jpg"
+      ],
+
+      "downloads": [
+        {
+          "quality": "480p",
+          "size": "450 MB",
+          "url": "#"
+        },
+        {
+          "quality": "720p",
+          "size": "850 MB",
+          "url": "#"
+        },
+        {
+          "quality": "1080p",
+          "size": "1.8 GB",
+          "url": "#"
+        }
+      ]
     }
   ]
 }

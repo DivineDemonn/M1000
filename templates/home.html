@@ -3,6 +3,7 @@
    File: templates/home.html
 
    Compatible with:
+   - base.html
    - Flask app.py
    - featured
    - movies
@@ -10,11 +11,10 @@
    - popular_movies
    - categories
 
-   Adsterra:
-   - 300x250 top
-   - 300x250 after hero
-   - 300x250 middle
-   - 300x250 bottom
+   IMPORTANT:
+   - Category links use the existing Flask "category" endpoint.
+   - No category.html logic is required inside this file.
+   - All movie cards use movie_detail.
 ========================================================= #}
 
 {% extends "base.html" %}
@@ -30,7 +30,7 @@ M1000 — Watch & Discover Movies
 
 
 {# =========================================================
-   MAIN CONTENT
+   PAGE CONTENT
 ========================================================= #}
 
 {% block content %}
@@ -75,12 +75,6 @@ M1000 — Watch & Discover Movies
 
     {# =====================================================
        FEATURED MOVIE
-       
-       IMPORTANT:
-       app.py sends:
-           featured=featured
-       
-       So use "featured" here.
     ====================================================== #}
 
     {% set hero = featured if featured else (movies[0] if movies else none) %}
@@ -132,9 +126,11 @@ M1000 — Watch & Discover Movies
             <div class="hero-meta">
 
                 {% if hero.year %}
+
                 <span>
                     {{ hero.year }}
                 </span>
+
                 {% endif %}
 
 
@@ -226,7 +222,6 @@ M1000 — Watch & Discover Movies
 
     {% else %}
 
-
     {# =====================================================
        EMPTY HERO
     ====================================================== #}
@@ -268,14 +263,14 @@ M1000 — Watch & Discover Movies
 
 
     {# =====================================================
-       PAGE CONTAINER
+       MAIN PAGE CONTAINER
     ====================================================== #}
 
     <div class="page-container">
 
 
         {# =================================================
-           AD AFTER HERO
+           AFTER HERO AD
            ADSTERRA 300x250
         ================================================== #}
 
@@ -312,12 +307,6 @@ M1000 — Watch & Discover Movies
 
         {# =================================================
            LATEST MOVIES
-           
-           IMPORTANT:
-           app.py already creates newest_movies.
-           
-           Use newest_movies instead of all movies so the
-           Latest Movies section actually follows added_date.
         ================================================== #}
 
         <section
@@ -391,9 +380,9 @@ M1000 — Watch & Discover Movies
                         {% endif %}
 
 
-                        <div class="poster-overlay">
+                        {% if movie.id %}
 
-                            {% if movie.id %}
+                        <div class="poster-overlay">
 
                             <a
                                 href="{{ url_for(
@@ -406,9 +395,9 @@ M1000 — Watch & Discover Movies
                                 ▶
                             </a>
 
-                            {% endif %}
-
                         </div>
+
+                        {% endif %}
 
                     </div>
 
@@ -495,7 +484,6 @@ M1000 — Watch & Discover Movies
 
 
             {% else %}
-
 
             <div class="empty-state">
 
@@ -623,12 +611,18 @@ M1000 — Watch & Discover Movies
                             decoding="async"
                         >
 
+                        {% else %}
+
+                        <div class="movie-poster-placeholder">
+                            🎬
+                        </div>
+
                         {% endif %}
 
 
-                        <div class="poster-overlay">
+                        {% if movie.id %}
 
-                            {% if movie.id %}
+                        <div class="poster-overlay">
 
                             <a
                                 href="{{ url_for(
@@ -641,14 +635,16 @@ M1000 — Watch & Discover Movies
                                 ▶
                             </a>
 
-                            {% endif %}
-
                         </div>
+
+                        {% endif %}
 
                     </div>
 
 
                     <div class="movie-info">
+
+                        {% if movie.id %}
 
                         <a
                             href="{{ url_for(
@@ -659,6 +655,14 @@ M1000 — Watch & Discover Movies
                         >
                             {{ movie.title | default('Untitled') }}
                         </a>
+
+                        {% else %}
+
+                        <span class="movie-title">
+                            {{ movie.title | default('Untitled') }}
+                        </span>
+
+                        {% endif %}
 
 
                         <div class="movie-meta">
@@ -692,6 +696,8 @@ M1000 — Watch & Discover Movies
                         </div>
 
 
+                        {% if movie.id %}
+
                         <div class="movie-card-download">
 
                             <a
@@ -705,6 +711,8 @@ M1000 — Watch & Discover Movies
                             </a>
 
                         </div>
+
+                        {% endif %}
 
                     </div>
 
@@ -721,7 +729,7 @@ M1000 — Watch & Discover Movies
 
 
         {# =================================================
-           NEW RELEASES
+           TAMIL NEW MOVIES
         ================================================== #}
 
         {% set new_movies = movies
@@ -784,12 +792,18 @@ M1000 — Watch & Discover Movies
                             decoding="async"
                         >
 
+                        {% else %}
+
+                        <div class="movie-poster-placeholder">
+                            🎬
+                        </div>
+
                         {% endif %}
 
 
-                        <div class="poster-overlay">
+                        {% if movie.id %}
 
-                            {% if movie.id %}
+                        <div class="poster-overlay">
 
                             <a
                                 href="{{ url_for(
@@ -802,14 +816,16 @@ M1000 — Watch & Discover Movies
                                 ▶
                             </a>
 
-                            {% endif %}
-
                         </div>
+
+                        {% endif %}
 
                     </div>
 
 
                     <div class="movie-info">
+
+                        {% if movie.id %}
 
                         <a
                             href="{{ url_for(
@@ -820,6 +836,14 @@ M1000 — Watch & Discover Movies
                         >
                             {{ movie.title | default('Untitled') }}
                         </a>
+
+                        {% else %}
+
+                        <span class="movie-title">
+                            {{ movie.title | default('Untitled') }}
+                        </span>
+
+                        {% endif %}
 
 
                         <div class="movie-meta">
@@ -853,6 +877,8 @@ M1000 — Watch & Discover Movies
                         </div>
 
 
+                        {% if movie.id %}
+
                         <div class="movie-card-download">
 
                             <a
@@ -866,6 +892,8 @@ M1000 — Watch & Discover Movies
                             </a>
 
                         </div>
+
+                        {% endif %}
 
                     </div>
 
@@ -882,7 +910,7 @@ M1000 — Watch & Discover Movies
 
 
         {# =================================================
-           DUBBED MOVIES
+           TAMIL DUBBED MOVIES
         ================================================== #}
 
         {% set dubbed_movies = movies
@@ -949,12 +977,18 @@ M1000 — Watch & Discover Movies
                             decoding="async"
                         >
 
+                        {% else %}
+
+                        <div class="movie-poster-placeholder">
+                            🎬
+                        </div>
+
                         {% endif %}
 
 
-                        <div class="poster-overlay">
+                        {% if movie.id %}
 
-                            {% if movie.id %}
+                        <div class="poster-overlay">
 
                             <a
                                 href="{{ url_for(
@@ -967,14 +1001,16 @@ M1000 — Watch & Discover Movies
                                 ▶
                             </a>
 
-                            {% endif %}
-
                         </div>
+
+                        {% endif %}
 
                     </div>
 
 
                     <div class="movie-info">
+
+                        {% if movie.id %}
 
                         <a
                             href="{{ url_for(
@@ -985,6 +1021,14 @@ M1000 — Watch & Discover Movies
                         >
                             {{ movie.title | default('Untitled') }}
                         </a>
+
+                        {% else %}
+
+                        <span class="movie-title">
+                            {{ movie.title | default('Untitled') }}
+                        </span>
+
+                        {% endif %}
 
 
                         <div class="movie-meta">
@@ -1018,6 +1062,8 @@ M1000 — Watch & Discover Movies
                         </div>
 
 
+                        {% if movie.id %}
+
                         <div class="movie-card-download">
 
                             <a
@@ -1031,6 +1077,8 @@ M1000 — Watch & Discover Movies
                             </a>
 
                         </div>
+
+                        {% endif %}
 
                     </div>
 
@@ -1110,12 +1158,18 @@ M1000 — Watch & Discover Movies
                             decoding="async"
                         >
 
+                        {% else %}
+
+                        <div class="movie-poster-placeholder">
+                            🎬
+                        </div>
+
                         {% endif %}
 
 
-                        <div class="poster-overlay">
+                        {% if movie.id %}
 
-                            {% if movie.id %}
+                        <div class="poster-overlay">
 
                             <a
                                 href="{{ url_for(
@@ -1128,14 +1182,16 @@ M1000 — Watch & Discover Movies
                                 ▶
                             </a>
 
-                            {% endif %}
-
                         </div>
+
+                        {% endif %}
 
                     </div>
 
 
                     <div class="movie-info">
+
+                        {% if movie.id %}
 
                         <a
                             href="{{ url_for(
@@ -1146,6 +1202,14 @@ M1000 — Watch & Discover Movies
                         >
                             {{ movie.title | default('Untitled') }}
                         </a>
+
+                        {% else %}
+
+                        <span class="movie-title">
+                            {{ movie.title | default('Untitled') }}
+                        </span>
+
+                        {% endif %}
 
 
                         <div class="movie-meta">
@@ -1179,6 +1243,8 @@ M1000 — Watch & Discover Movies
                         </div>
 
 
+                        {% if movie.id %}
+
                         <div class="movie-card-download">
 
                             <a
@@ -1192,6 +1258,188 @@ M1000 — Watch & Discover Movies
                             </a>
 
                         </div>
+
+                        {% endif %}
+
+                    </div>
+
+                </article>
+
+                {% endfor %}
+
+            </div>
+
+        </section>
+
+        {% endif %}
+
+
+
+        {# =================================================
+           POPULAR MOVIES
+           Only shown when app.py provides popular_movies
+        ================================================== #}
+
+        {% if popular_movies %}
+
+        <section
+            class="section"
+            id="popular"
+        >
+
+            <div class="section-header">
+
+                <h2 class="section-title">
+                    Popular Movies
+                </h2>
+
+                <a
+                    href="{{ url_for('all_movies') }}"
+                    class="section-link"
+                >
+                    View All →
+                </a>
+
+            </div>
+
+
+            <div class="movie-grid">
+
+                {% for movie in popular_movies[:6] %}
+
+                <article class="movie-card">
+
+                    <div class="movie-poster">
+
+                        {% if movie.badge %}
+
+                        <span class="movie-badge">
+                            {{ movie.badge }}
+                        </span>
+
+                        {% endif %}
+
+
+                        {% if movie.quality %}
+
+                        <span class="quality-badge">
+                            {{ movie.quality }}
+                        </span>
+
+                        {% endif %}
+
+
+                        {% if movie.poster %}
+
+                        <img
+                            src="{{ movie.poster }}"
+                            alt="{{ movie.title | default('Movie') }} poster"
+                            loading="lazy"
+                            decoding="async"
+                        >
+
+                        {% else %}
+
+                        <div class="movie-poster-placeholder">
+                            🎬
+                        </div>
+
+                        {% endif %}
+
+
+                        {% if movie.id %}
+
+                        <div class="poster-overlay">
+
+                            <a
+                                href="{{ url_for(
+                                    'movie_detail',
+                                    movie_id=movie.id
+                                ) }}"
+                                class="poster-play"
+                                aria-label="View {{ movie.title | default('Movie') }}"
+                            >
+                                ▶
+                            </a>
+
+                        </div>
+
+                        {% endif %}
+
+                    </div>
+
+
+                    <div class="movie-info">
+
+                        {% if movie.id %}
+
+                        <a
+                            href="{{ url_for(
+                                'movie_detail',
+                                movie_id=movie.id
+                            ) }}"
+                            class="movie-title"
+                        >
+                            {{ movie.title | default('Untitled') }}
+                        </a>
+
+                        {% else %}
+
+                        <span class="movie-title">
+                            {{ movie.title | default('Untitled') }}
+                        </span>
+
+                        {% endif %}
+
+
+                        <div class="movie-meta">
+
+                            {% if movie.year %}
+
+                            <span>
+                                {{ movie.year }}
+                            </span>
+
+                            {% endif %}
+
+
+                            {% if movie.year and movie.language %}
+
+                            <span>
+                                •
+                            </span>
+
+                            {% endif %}
+
+
+                            {% if movie.language %}
+
+                            <span class="movie-category">
+                                {{ movie.language }}
+                            </span>
+
+                            {% endif %}
+
+                        </div>
+
+
+                        {% if movie.id %}
+
+                        <div class="movie-card-download">
+
+                            <a
+                                href="{{ url_for(
+                                    'movie_detail',
+                                    movie_id=movie.id
+                                ) }}"
+                                class="btn btn-download"
+                            >
+                                View Movie
+                            </a>
+
+                        </div>
+
+                        {% endif %}
 
                     </div>
 

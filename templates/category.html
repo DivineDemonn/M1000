@@ -1,0 +1,832 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <meta
+        name="theme-color"
+        content="#080808"
+    >
+
+    <meta
+        name="color-scheme"
+        content="dark"
+    >
+
+    <meta
+        name="description"
+        content="{{ category_name }} — M1000"
+    >
+
+    <title>
+        {{ category_name }} — M1000
+    </title>
+
+
+    <!-- GOOGLE FONT -->
+
+    <link
+        rel="preconnect"
+        href="https://fonts.googleapis.com"
+    >
+
+    <link
+        rel="preconnect"
+        href="https://fonts.gstatic.com"
+        crossorigin
+    >
+
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap"
+        rel="stylesheet"
+    >
+
+
+    <!-- MAIN CSS -->
+
+    <link
+        rel="stylesheet"
+        href="{{ url_for('static', filename='css/style.css') }}"
+    >
+
+
+    <style>
+
+        /* =====================================================
+           CATEGORY PAGE
+        ===================================================== */
+
+        .category-page {
+            width: 100%;
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 110px 20px 60px;
+        }
+
+
+        /* =====================================================
+           CATEGORY HEADER
+        ===================================================== */
+
+        .category-header {
+            margin-bottom: 30px;
+        }
+
+        .category-header h1 {
+            margin: 0;
+            font-size: clamp(28px, 5vw, 44px);
+            font-weight: 900;
+            line-height: 1.1;
+            color: #ffffff;
+        }
+
+        .category-header h1 span {
+            color: #ffd400;
+        }
+
+        .category-count {
+            margin-top: 10px;
+            color: #999999;
+            font-size: 14px;
+        }
+
+
+        /* =====================================================
+           MOVIE GRID
+        ===================================================== */
+
+        .category-grid {
+            display: grid;
+            grid-template-columns: repeat(
+                auto-fill,
+                minmax(160px, 1fr)
+            );
+            gap: 22px;
+        }
+
+
+        /* =====================================================
+           MOVIE CARD
+        ===================================================== */
+
+        .category-card {
+            position: relative;
+            display: block;
+            overflow: hidden;
+            text-decoration: none;
+            background: #111111;
+            border-radius: 12px;
+            border: 1px solid rgba(
+                255,
+                255,
+                255,
+                0.06
+            );
+            transition:
+                transform 0.25s ease,
+                border-color 0.25s ease,
+                box-shadow 0.25s ease;
+        }
+
+
+        .category-card:hover {
+            transform: translateY(-6px);
+            border-color: rgba(
+                255,
+                212,
+                0,
+                0.55
+            );
+            box-shadow:
+                0 15px 40px rgba(
+                    0,
+                    0,
+                    0,
+                    0.55
+                );
+        }
+
+
+        /* =====================================================
+           POSTER
+        ===================================================== */
+
+        .category-poster {
+            position: relative;
+            width: 100%;
+            aspect-ratio: 2 / 3;
+            overflow: hidden;
+            background: #181818;
+        }
+
+        .category-poster img {
+            display: block;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition:
+                transform 0.35s ease;
+        }
+
+        .category-card:hover
+        .category-poster img {
+            transform: scale(1.05);
+        }
+
+
+        /* =====================================================
+           IMAGE FALLBACK
+        ===================================================== */
+
+        .poster-fallback {
+            position: absolute;
+            inset: 0;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            padding: 15px;
+
+            text-align: center;
+
+            background:
+                linear-gradient(
+                    145deg,
+                    #161616,
+                    #080808
+                );
+
+            color: #777777;
+            font-size: 13px;
+            font-weight: 700;
+        }
+
+
+        /* =====================================================
+           RATING
+        ===================================================== */
+
+        .category-rating {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+
+            padding: 5px 8px;
+
+            border-radius: 7px;
+
+            background: rgba(
+                0,
+                0,
+                0,
+                0.82
+            );
+
+            color: #ffd400;
+
+            font-size: 12px;
+            font-weight: 800;
+
+            backdrop-filter: blur(6px);
+        }
+
+
+        /* =====================================================
+           CARD INFO
+        ===================================================== */
+
+        .category-info {
+            padding: 13px;
+        }
+
+        .category-title {
+            margin: 0;
+
+            color: #ffffff;
+
+            font-size: 15px;
+            font-weight: 800;
+
+            line-height: 1.3;
+
+            display: -webkit-box;
+            -webkit-box-orient: vertical;
+            -webkit-line-clamp: 2;
+
+            overflow: hidden;
+        }
+
+
+        .category-meta {
+            display: flex;
+            flex-wrap: wrap;
+
+            gap: 7px;
+
+            margin-top: 8px;
+
+            color: #888888;
+
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+
+        .category-meta span:not(:last-child)::after {
+            content: "•";
+            margin-left: 7px;
+            color: #555555;
+        }
+
+
+        /* =====================================================
+           GENRE
+        ===================================================== */
+
+        .category-genre {
+            margin-top: 7px;
+
+            color: #777777;
+
+            font-size: 11px;
+
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+
+        /* =====================================================
+           EMPTY CATEGORY
+        ===================================================== */
+
+        .category-empty {
+            min-height: 300px;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            text-align: center;
+
+            padding: 40px;
+
+            border-radius: 14px;
+
+            background: #101010;
+
+            border: 1px solid rgba(
+                255,
+                255,
+                255,
+                0.06
+            );
+        }
+
+        .category-empty-inner {
+            max-width: 450px;
+        }
+
+        .category-empty-icon {
+            font-size: 42px;
+            margin-bottom: 15px;
+        }
+
+        .category-empty h2 {
+            margin: 0 0 10px;
+
+            color: #ffffff;
+
+            font-size: 24px;
+            font-weight: 800;
+        }
+
+        .category-empty p {
+            margin: 0;
+
+            color: #777777;
+
+            font-size: 14px;
+            line-height: 1.6;
+        }
+
+
+        /* =====================================================
+           MOBILE
+        ===================================================== */
+
+        @media (max-width: 700px) {
+
+            .category-page {
+                padding:
+                    95px
+                    12px
+                    45px;
+            }
+
+
+            .category-grid {
+                grid-template-columns:
+                    repeat(
+                        2,
+                        minmax(0, 1fr)
+                    );
+
+                gap: 13px;
+            }
+
+
+            .category-card {
+                border-radius: 9px;
+            }
+
+
+            .category-info {
+                padding: 10px;
+            }
+
+
+            .category-title {
+                font-size: 13px;
+            }
+
+
+            .category-meta {
+                font-size: 10px;
+                gap: 5px;
+            }
+
+
+            .category-meta span:not(:last-child)::after {
+                margin-left: 5px;
+            }
+
+
+            .category-genre {
+                font-size: 10px;
+            }
+
+
+            .category-rating {
+                top: 7px;
+                right: 7px;
+
+                padding:
+                    4px
+                    6px;
+
+                font-size: 10px;
+            }
+
+        }
+
+
+        /* =====================================================
+           SMALL PHONES
+        ===================================================== */
+
+        @media (max-width: 380px) {
+
+            .category-grid {
+                gap: 10px;
+            }
+
+            .category-page {
+                padding-left: 10px;
+                padding-right: 10px;
+            }
+
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+
+<!-- =========================================================
+     HEADER
+========================================================== -->
+
+<header class="site-header">
+
+    <nav class="navbar">
+
+        <div class="navbar-inner">
+
+            <!-- BRAND -->
+
+            <a
+                href="{{ url_for('home') }}"
+                class="brand"
+            >
+
+                <span class="brand-logo-wrap">
+
+                    <img
+                        src="{{ url_for(
+                            'static',
+                            filename='images/logo.png'
+                        ) }}"
+                        alt="M1000"
+                        class="brand-logo"
+                        width="40"
+                        height="40"
+                    >
+
+                </span>
+
+                <span class="brand-text">
+                    M1000
+                </span>
+
+            </a>
+
+
+            <!-- DESKTOP NAV -->
+
+            <div class="desktop-nav">
+
+                <a
+                    href="{{ url_for('home') }}"
+                    class="nav-link"
+                >
+                    Home
+                </a>
+
+                <a
+                    href="{{ url_for(
+                        'category',
+                        category_name='Tamil HD Movies'
+                    ) }}"
+                    class="nav-link"
+                >
+                    Tamil HD
+                </a>
+
+                <a
+                    href="{{ url_for(
+                        'category',
+                        category_name='Tamil New Movies'
+                    ) }}"
+                    class="nav-link active"
+                >
+                    New Movies
+                </a>
+
+                <a
+                    href="{{ url_for(
+                        'category',
+                        category_name='Tamil Dubbed Movies'
+                    ) }}"
+                    class="nav-link"
+                >
+                    Dubbed
+                </a>
+
+                <a
+                    href="{{ url_for(
+                        'category',
+                        category_name='Web Series'
+                    ) }}"
+                    class="nav-link"
+                >
+                    Web Series
+                </a>
+
+                <a
+                    href="{{ url_for('all_movies') }}"
+                    class="nav-link"
+                >
+                    All Movies
+                </a>
+
+            </div>
+
+
+            <!-- NAV ACTIONS -->
+
+            <div class="nav-actions">
+
+                <button
+                    type="button"
+                    class="mobile-menu-button"
+                    id="mobileMenuButton"
+                    aria-label="Open menu"
+                    aria-expanded="false"
+                >
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </button>
+
+            </div>
+
+        </div>
+
+    </nav>
+
+</header>
+
+
+<!-- =========================================================
+     CATEGORY CONTENT
+========================================================== -->
+
+<main class="category-page">
+
+
+    <!-- CATEGORY HEADER -->
+
+    <section class="category-header">
+
+        <h1>
+            <span>🎬</span>
+            {{ category_name }}
+        </h1>
+
+        <div class="category-count">
+
+            {% if movies %}
+
+                {{ movies|length }}
+                {% if movies|length == 1 %}
+                    movie
+                {% else %}
+                    movies
+                {% endif %}
+
+            {% else %}
+
+                No movies available
+
+            {% endif %}
+
+        </div>
+
+    </section>
+
+
+    <!-- =====================================================
+         MOVIES EXIST
+    ====================================================== -->
+
+    {% if movies %}
+
+        <section
+            class="category-grid"
+            aria-label="{{ category_name }}"
+        >
+
+            {% for movie in movies %}
+
+                <a
+                    href="{{ url_for(
+                        'movie_detail',
+                        movie_id=movie.get('id', '')
+                    ) }}"
+                    class="category-card"
+                >
+
+
+                    <!-- POSTER -->
+
+                    <div class="category-poster">
+
+                        {% if movie.get('poster') %}
+
+                            <img
+                                src="{{ movie.get('poster') }}"
+                                alt="{{ movie.get('title', 'Movie') }}"
+                                loading="lazy"
+                                onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';"
+                            >
+
+                            <div
+                                class="poster-fallback"
+                                style="display:none;"
+                            >
+                                Image unavailable
+                            </div>
+
+                        {% else %}
+
+                            <div class="poster-fallback">
+                                No poster
+                            </div>
+
+                        {% endif %}
+
+
+                        <!-- RATING -->
+
+                        {% if movie.get('rating') %}
+
+                            <div class="category-rating">
+
+                                ⭐
+                                {{ movie.get('rating') }}
+
+                            </div>
+
+                        {% endif %}
+
+                    </div>
+
+
+                    <!-- CARD INFO -->
+
+                    <div class="category-info">
+
+
+                        <h2 class="category-title">
+
+                            {{ movie.get(
+                                'title',
+                                'Untitled'
+                            ) }}
+
+                        </h2>
+
+
+                        <div class="category-meta">
+
+                            {% if movie.get('year') %}
+
+                                <span>
+                                    {{ movie.get('year') }}
+                                </span>
+
+                            {% endif %}
+
+
+                            {% if movie.get('duration') %}
+
+                                <span>
+                                    {{ movie.get('duration') }}
+                                </span>
+
+                            {% endif %}
+
+
+                            {% if movie.get('certificate') %}
+
+                                <span>
+                                    {{ movie.get('certificate') }}
+                                </span>
+
+                            {% endif %}
+
+                        </div>
+
+
+                        {% if movie.get('genre') %}
+
+                            <div class="category-genre">
+
+                                {% if movie.get('genre') is string %}
+
+                                    {{ movie.get('genre') }}
+
+                                {% else %}
+
+                                    {{ movie.get('genre') | join(', ') }}
+
+                                {% endif %}
+
+                            </div>
+
+                        {% endif %}
+
+                    </div>
+
+                </a>
+
+            {% endfor %}
+
+        </section>
+
+
+    <!-- =====================================================
+         EMPTY
+    ====================================================== -->
+
+    {% else %}
+
+        <section class="category-empty">
+
+            <div class="category-empty-inner">
+
+                <div class="category-empty-icon">
+                    🎬
+                </div>
+
+                <h2>
+                    No Movies Found
+                </h2>
+
+                <p>
+                    There are currently no movies in
+                    <strong>
+                        {{ category_name }}
+                    </strong>.
+                </p>
+
+            </div>
+
+        </section>
+
+    {% endif %}
+
+
+</main>
+
+
+<!-- =========================================================
+     FOOTER
+========================================================== -->
+
+<footer class="site-footer">
+
+    <div class="footer-bottom">
+
+        <p>
+            ©
+            {{ current_year | default(2026) }}
+            M1000. All rights reserved.
+        </p>
+
+        <p>
+            Built for cinematic experiences.
+        </p>
+
+    </div>
+
+</footer>
+
+
+<!-- =========================================================
+     JAVASCRIPT
+========================================================== -->
+
+<script
+    src="{{ url_for(
+        'static',
+        filename='js/app.js'
+    ) }}"
+    defer
+></script>
+
+
+</body>
+</html>
